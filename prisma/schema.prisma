@@ -1,0 +1,64 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               String     @id @default(cuid())
+  email            String     @unique
+  name             String?
+  password         String
+  image            String?    @db.Text
+  resetToken       String?    @unique
+  resetTokenExpiry DateTime?
+  stripeCustomerId String?    @unique
+  subscriptionTier Tier       @default(FREE)
+  dailyScansCount  Int        @default(0)
+  lastScanDate     DateTime   @default(now())
+  scans            Scan[]
+  bookmarks        Bookmark[]
+  createdAt        DateTime   @default(now())
+}
+
+model Scan {
+  id              String     @id @default(cuid())
+  url             String
+  status          ScanStatus @default(PROCESSING)
+  score           Int?       
+  metaTitle       String?
+  metaDescription String?
+  wordCount       Int        @default(0)
+  h1Count         Int        @default(0)
+  missingAltCount Int        @default(0)
+  summary         String?
+  criticalFixes   String[]
+  loadTimeMs      Int?
+  pageSizeKb      Int?
+  userId          String?
+  user            User?      @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+model Bookmark {
+  id        String   @id @default(cuid())
+  url       String
+  title     String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, url])
+}
+
+enum Tier {
+  FREE
+  PRO
+}
+
+enum ScanStatus {
+  PROCESSING
+  COMPLETED
+  FAILED
+}
