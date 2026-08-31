@@ -40,8 +40,9 @@ export default function SignupPage() {
       }
 
       router.push("/");
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : "An unexpected error occurred";
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -49,9 +50,7 @@ export default function SignupPage() {
 
   return (
     <div className="min-h-screen select-none flex items-center justify-center bg-[#030712] text-slate-100 p-4 font-sans selection:bg-green-900/40 selection:text-white">
-      {/* Main  */}
       <div className="w-full max-w-md bg-[#090d16] border border-slate-800/80 rounded-2xl p-8 sm:p-10 shadow-2xl">
-        {/* Logo */}
         <div className="flex justify-center mb-6">
           <svg
             className="w-7 h-7 text-[#36a50a]"
@@ -68,7 +67,6 @@ export default function SignupPage() {
           </svg>
         </div>
 
-        {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-2xl font-bold tracking-tight text-lime-600 ">
             Create an account
@@ -82,11 +80,9 @@ export default function SignupPage() {
           <p className="text-xs text-red-500 text-center mb-4">{error}</p>
         )}
 
-        {/* 3. Attach onSubmit here */}
         <form onSubmit={handlesubmit} className="space-y-5">
-          {/* Full Name */}
           <div>
-            <label className="block text-xs font-medium text-lime-600  mb-2 uppercase tracking-wider">
+            <label className="block text-xs font-medium text-lime-600 mb-2 uppercase tracking-wider">
               Full Name
             </label>
             <input
@@ -100,9 +96,8 @@ export default function SignupPage() {
             />
           </div>
 
-          {/* Email */}
           <div>
-            <label className="block text-xs font-medium text-lime-600  mb-2 uppercase tracking-wider">
+            <label className="block text-xs font-medium text-lime-600 mb-2 uppercase tracking-wider">
               Email Address
             </label>
             <input
@@ -116,9 +111,8 @@ export default function SignupPage() {
             />
           </div>
 
-          {/* Password */}
           <div>
-            <label className="block text-xs font-medium text-lime-600  mb-2 uppercase tracking-wider">
+            <label className="block text-xs font-medium text-lime-600 mb-2 uppercase tracking-wider">
               Password
             </label>
             <input
@@ -132,7 +126,6 @@ export default function SignupPage() {
             />
           </div>
 
-          {/* Accent Button */}
           <button
             type="submit"
             disabled={loading}
@@ -142,7 +135,6 @@ export default function SignupPage() {
           </button>
         </form>
 
-        {/* Footer */}
         <div className="mt-8 pt-6 border-t border-slate-800/80 text-center">
           <p className="text-xs text-slate-400">
             Already have an account?{" "}

@@ -28,8 +28,9 @@ export default function ForgotPasswordPage() {
       }
 
       setIsSent(true);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : "An unexpected error occurred";
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -56,7 +57,7 @@ export default function ForgotPasswordPage() {
 
             <form onSubmit={handleSubmit} className="space-y-5">
               <div>
-                <label className="block text-xs font-medium text-lime-600  mb-2 uppercase tracking-wider">
+                <label className="block text-xs font-medium text-lime-600 mb-2 uppercase tracking-wider">
                   Email Address
                 </label>
                 <input
@@ -79,7 +80,6 @@ export default function ForgotPasswordPage() {
             </form>
           </>
         ) : (
-          /*Check Your Email Screen */
           <div className="text-center space-y-4 py-4">
             <div className="w-12 h-12 bg-slate-800/60 rounded-full flex items-center justify-center mx-auto text-xl text-white border border-slate-700">
               <span className="text-slate-500">✉</span>

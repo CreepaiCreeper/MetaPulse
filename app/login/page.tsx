@@ -39,8 +39,9 @@ export default function LoginPage() {
       }
 
       router.push("/");
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : "An unexpected error occurred";
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -48,9 +49,7 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen select-none flex items-center justify-center bg-[#030712] text-slate-100 p-4 font-sans selection:bg-lime-900/40 selection:text-white">
-      {/* Main Clean Dark Card */}
       <div className="w-full max-w-md bg-[#090d16] border border-slate-800/80 rounded-2xl p-8 sm:p-10 shadow-2xl">
-        {/* Logo */}
         <div className="flex justify-center mb-6">
           <svg
             className="w-7 h-7 text-[#36a50a]"
@@ -67,7 +66,6 @@ export default function LoginPage() {
           </svg>
         </div>
 
-        {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-2xl font-bold tracking-tight text-lime-600 ">
             Welcome back
@@ -81,9 +79,7 @@ export default function LoginPage() {
           <p className="text-xs text-red-500 text-center mb-4">{error}</p>
         )}
 
-        {/* --- FORM --- */}
         <form onSubmit={handleSubmit} className="space-y-5">
-          {/* Email */}
           <div>
             <label className="block text-xs font-medium text-lime-600 mb-2 uppercase tracking-wider">
               Email Address
@@ -99,10 +95,9 @@ export default function LoginPage() {
             />
           </div>
 
-          {/* Password */}
           <div>
             <div className="flex items-center justify-between mb-2">
-              <label className="block text-xs font-medium text-lime-600  uppercase tracking-wider">
+              <label className="block text-xs font-medium text-lime-600 uppercase tracking-wider">
                 Password
               </label>
               <Link
@@ -123,7 +118,6 @@ export default function LoginPage() {
             />
           </div>
 
-          {/* Submit Button */}
           <button
             type="submit"
             disabled={loading}
@@ -133,7 +127,6 @@ export default function LoginPage() {
           </button>
         </form>
 
-        {/* Footer */}
         <div className="mt-8 pt-6 border-t border-slate-800/80 text-center">
           <p className="text-xs text-slate-400">
             Don't have an account?{" "}
