@@ -39,8 +39,9 @@ export async function scrapeWebsite(url: string) {
       missingAltCount,
       wordCount,
     };
-  } catch (error: any) {
-    console.error("Scraper Error:", error.message);
+} catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error("Scraper Error:", errorMessage);
     throw new Error("Could not scrape the target website.");
   }
 }

@@ -76,10 +76,11 @@ export async function POST(req: Request) {
       { message: "Reset link has been sent." },
       { status: 200 }
     );
-  } catch (error: any) {
+} catch (error: unknown) {
     console.error("Forgot password error:", error);
+    const errorMessage = error instanceof Error ? error.message : "Internal server error";
     return NextResponse.json(
-      { message: error.message || "Internal server error" },
+      { message: errorMessage },
       { status: 500 }
     );
   }

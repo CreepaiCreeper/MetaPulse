@@ -29,8 +29,9 @@ export async function getPerformanceMetrics(url: string) {
         loadTime,
         pageSizeKb
     }
-  } catch (error:any) {
-    console.error("PageSpeed API Warning/Error:", error.message || error);
+} catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error("PageSpeed API Warning/Error:", errorMessage);
     return {
       loadTimeMs: 1850,
       pageSizeKb: 1200,

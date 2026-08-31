@@ -58,14 +58,21 @@ Return a valid JSON object with exact keys:
     return {
       score: parsedData.score ?? 50,
       summary: parsedData.summary ?? "No summary generated.",
-      criticalFixes: parsedData.criticalFixes ?? ["Fix meta tags and content structure."],
+      criticalFixes: parsedData.criticalFixes ?? [
+        "Fix meta tags and content structure.",
+      ],
     };
-  } catch (error: any) {
-    console.error("AI Analysis Error:", error.message || error);
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error("AI Analysis Error:", errorMessage);
     return {
       score: 45,
-      summary: "Basic SEO evaluation completed. Critical fixes are required for optimal performance.",
-      criticalFixes: ["Ensure meta description is present", "Add alt attributes to all images"],
+      summary:
+        "Basic SEO evaluation completed. Critical fixes are required for optimal performance.",
+      criticalFixes: [
+        "Ensure meta description is present",
+        "Add alt attributes to all images",
+      ],
     };
   }
 }
