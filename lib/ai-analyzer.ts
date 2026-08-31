@@ -61,7 +61,7 @@ Return a valid JSON object with exact keys:
       criticalFixes: parsedData.criticalFixes ?? ["Fix meta tags and content structure."],
     };
   } catch (error: any) {
-    console.error("AI Analysis Error:", error.message || error);]
+    console.error("AI Analysis Error:", error.message || error);
     return {
       score: 45,
       summary: "Basic SEO evaluation completed. Critical fixes are required for optimal performance.",
