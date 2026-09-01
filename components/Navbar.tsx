@@ -58,8 +58,6 @@ const Navbar = () => {
           Meta<span className="text-lime-600 font-bold">Pulse</span>
         </span>
       </Link>
-
-      {/* 2. Links (Center Spacing) - hidden on phones only, visible from tablet up */}
       <div className="hidden sm:flex items-center gap-2">
         {navLinks.map(({ href, label, icon: Icon }) => (
           <Link
@@ -72,10 +70,7 @@ const Navbar = () => {
           </Link>
         ))}
       </div>
-
-      {/* 3. Profile + Menu Trigger */}
       <div className="flex items-center gap-1">
-        {/* Full profile pill - tablet and up */}
         <div className="hidden sm:flex items-center gap-2 bg-[#171717] pl-1.5 pr-3 py-1.5 rounded-full border border-[#262626]">
           <img
             src="reyna.jpeg"
@@ -86,8 +81,6 @@ const Navbar = () => {
             Takashi
           </span>
         </div>
-
-        {/* FREE badge - tablet and up */}
         <div className="hidden sm:flex items-center px-2 py-1 rounded-full border border-lime-600/50 bg-lime-600/10">
           <span
             className="text-lime-500 text-[11px] font-bold select-none tracking-wider"
@@ -97,20 +90,17 @@ const Navbar = () => {
           </span>
         </div>
 
-        {/* Logout - tablet and up */}
         <button className="hidden sm:flex items-center gap-2 text-xs font-semibold text-white/50 cursor-pointer hover:text-lime-600 hover:bg-[#171717] transition-colors px-3 py-2 rounded-full">
           <LogOut className="w-4 h-4" />
           <span>Logout</span>
         </button>
 
-        {/* Compact avatar - phones only */}
         <img
           src="reyna.jpeg"
           alt="Profile"
           className="sm:hidden h-8 w-8 rounded-full object-cover cursor-pointer border border-[#262626]"
         />
 
-        {/* Hamburger toggle - phones only */}
         <button
           onClick={() => setIsMenuOpen((prev) => !prev)}
           aria-label="Toggle navigation menu"
@@ -121,7 +111,6 @@ const Navbar = () => {
         </button>
       </div>
 
-      {/* 4. Dropdown Menu - phones only, shown when hamburger is open */}
       {isMenuOpen && (
         <div className="sm:hidden absolute top-16 left-0 w-full bg-[#0a0a0a] border-b border-[#262626] shadow-xl shadow-black/40 flex flex-col p-3 gap-1 z-50">
           {navLinks.map(({ href, label, icon: Icon }) => (
