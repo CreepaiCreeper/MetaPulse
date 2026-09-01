@@ -26,7 +26,7 @@ const Navbar = () => {
       </Link>
 
       {/* 2. Links (Center Spacing) */}
-      <div className="flex items-center gap-2">
+      <div className="md:flex hidden items-center gap-2">
         <Link
           href="/dashboard"
           className="flex items-center gap-2 text-xs font-semibold text-[#a3a3a3] hover:text-lime-600 hover:bg-[#171717] transition-colors group px-3 py-2 rounded-full"
