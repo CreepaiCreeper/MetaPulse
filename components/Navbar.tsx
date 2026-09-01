@@ -23,7 +23,7 @@ const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navRef = useRef<HTMLElement>(null);
 
-  // Close the mobile/tablet dropdown on any click outside the navbar
+  // Close the phone dropdown on any click outside the navbar
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (navRef.current && !navRef.current.contains(event.target as Node)) {
@@ -37,7 +37,7 @@ const Navbar = () => {
   return (
     <nav
       ref={navRef}
-      className="relative h-16 w-full bg-[#0a0a0a] px-4 sm:px-6 lg:px-8 flex items-center justify-between lg:justify-evenly border-b border-[#262626]"
+      className="relative h-16 w-full bg-[#0a0a0a] px-4 sm:px-8 flex items-center justify-between sm:justify-evenly border-b border-[#262626]"
     >
       {/* 1. Logo */}
       <Link href="/" className="flex items-center gap-1.5 font-normal text-sm">
@@ -59,8 +59,8 @@ const Navbar = () => {
         </span>
       </Link>
 
-      {/* 2. Links (Center Spacing) - desktop (lg) and above only */}
-      <div className="hidden lg:flex items-center gap-2">
+      {/* 2. Links (Center Spacing) - hidden on phones only, visible from tablet up */}
+      <div className="hidden sm:flex items-center gap-2">
         {navLinks.map(({ href, label, icon: Icon }) => (
           <Link
             key={href}
@@ -75,8 +75,8 @@ const Navbar = () => {
 
       {/* 3. Profile + Menu Trigger */}
       <div className="flex items-center gap-1">
-        {/* Full profile pill - desktop only */}
-        <div className="hidden lg:flex items-center gap-2 bg-[#171717] pl-1.5 pr-3 py-1.5 rounded-full border border-[#262626]">
+        {/* Full profile pill - tablet and up */}
+        <div className="hidden sm:flex items-center gap-2 bg-[#171717] pl-1.5 pr-3 py-1.5 rounded-full border border-[#262626]">
           <img
             src="reyna.jpeg"
             alt="Profile"
@@ -87,8 +87,8 @@ const Navbar = () => {
           </span>
         </div>
 
-        {/* FREE badge - desktop only */}
-        <div className="hidden lg:flex items-center px-2 py-1 rounded-full border border-lime-600/50 bg-lime-600/10">
+        {/* FREE badge - tablet and up */}
+        <div className="hidden sm:flex items-center px-2 py-1 rounded-full border border-lime-600/50 bg-lime-600/10">
           <span
             className="text-lime-500 text-[11px] font-bold select-none tracking-wider"
             style={{ textShadow: "0 0 8px rgba(132, 204, 22, 0.8)" }}
@@ -97,33 +97,33 @@ const Navbar = () => {
           </span>
         </div>
 
-        {/* Logout - desktop only */}
-        <button className="hidden lg:flex items-center gap-2 text-xs font-semibold text-white/50 cursor-pointer hover:text-lime-600 hover:bg-[#171717] transition-colors px-3 py-2 rounded-full">
+        {/* Logout - tablet and up */}
+        <button className="hidden sm:flex items-center gap-2 text-xs font-semibold text-white/50 cursor-pointer hover:text-lime-600 hover:bg-[#171717] transition-colors px-3 py-2 rounded-full">
           <LogOut className="w-4 h-4" />
           <span>Logout</span>
         </button>
 
-        {/* Compact avatar - mobile & tablet only */}
+        {/* Compact avatar - phones only */}
         <img
           src="reyna.jpeg"
           alt="Profile"
-          className="lg:hidden h-8 w-8 rounded-full object-cover cursor-pointer border border-[#262626]"
+          className="sm:hidden h-8 w-8 rounded-full object-cover cursor-pointer border border-[#262626]"
         />
 
-        {/* Hamburger toggle - mobile & tablet only */}
+        {/* Hamburger toggle - phones only */}
         <button
           onClick={() => setIsMenuOpen((prev) => !prev)}
           aria-label="Toggle navigation menu"
           aria-expanded={isMenuOpen}
-          className="lg:hidden flex items-center justify-center w-9 h-9 rounded-full text-white/70 hover:text-lime-600 hover:bg-[#171717] transition-colors"
+          className="sm:hidden flex items-center justify-center w-9 h-9 rounded-full text-white/70 hover:text-lime-600 hover:bg-[#171717] transition-colors"
         >
           {isMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </button>
       </div>
 
-      {/* 4. Dropdown Menu - mobile & tablet only, shown when hamburger is open */}
+      {/* 4. Dropdown Menu - phones only, shown when hamburger is open */}
       {isMenuOpen && (
-        <div className="lg:hidden absolute top-16 left-0 w-full bg-[#0a0a0a] border-b border-[#262626] shadow-xl shadow-black/40 flex flex-col p-3 gap-1 z-50">
+        <div className="sm:hidden absolute top-16 left-0 w-full bg-[#0a0a0a] border-b border-[#262626] shadow-xl shadow-black/40 flex flex-col p-3 gap-1 z-50">
           {navLinks.map(({ href, label, icon: Icon }) => (
             <Link
               key={href}
