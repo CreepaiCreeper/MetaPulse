@@ -22,8 +22,7 @@ const navLinks = [
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navRef = useRef<HTMLElement>(null);
-
-  // Close the phone dropdown on any click outside the navbar
+  
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (navRef.current && !navRef.current.contains(event.target as Node)) {
