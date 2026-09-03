@@ -8,27 +8,27 @@ datasource db {
 }
 
 model User {
-  id               String     @id @default(cuid())
-  email            String     @unique
+  id               String      @id @default(cuid())
+  email            String      @unique
   name             String?
   password         String
-  image            String?    @db.Text
-  resetToken       String?    @unique
+  image            String?     @db.Text
+  resetToken       String?     @unique
   resetTokenExpiry DateTime?
-  stripeCustomerId String?    @unique
-  subscriptionTier Tier       @default(FREE)
-  dailyScansCount  Int        @default(0)
-  lastScanDate     DateTime   @default(now())
+  stripeCustomerId String?     @unique
+  subscriptionTier Tier        @default(FREE)
+  dailyScansCount  Int         @default(0)
+  lastScanDate     DateTime    @default(now())
   scans            Scan[]
   bookmarks        Bookmark[]
-  createdAt        DateTime   @default(now())
+  createdAt        DateTime    @default(now())
 }
 
 model Scan {
   id              String     @id @default(cuid())
   url             String
   status          ScanStatus @default(PROCESSING)
-  score           Int?       
+  score           Int?
   metaTitle       String?
   metaDescription String?
   wordCount       Int        @default(0)
@@ -41,6 +41,7 @@ model Scan {
   userId          String?
   user            User?      @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
+
 model Bookmark {
   id        String   @id @default(cuid())
   url       String
@@ -54,7 +55,8 @@ model Bookmark {
 
 enum Tier {
   FREE
-  PRO
+  STARTER
+  ULTIMATE
 }
 
 enum ScanStatus {
