@@ -67,7 +67,7 @@ const plans = [
   };
 
   return (
-    <div className="h-screen w-full flex flex-col overflow-hidden">
+    <div className="h-screen w-full flex flex-col">
       <Navbar />
       <div className="flex-1 min-h-0 w-full bg-[#030712] flex flex-col items-center justify-center gap-6 px-4 select-none">
         {/* logo */}
