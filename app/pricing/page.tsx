@@ -94,7 +94,7 @@ const Pricing = () => {
           <h2 className="text-2xl md:text-3xl font-bold text-slate-200 mb-2">
             Flexible Plans for Web Intelligence
           </h2>
-          <p className="text-slate-600  text-sm md:text-base">
+          <p className="text-slate-600  text-sm mt-0 md:text-base">
             Pick the plan that matches how you work — quick audits for solo
             projects, or full-scale analysis for teams shipping at volume.
           </p>
@@ -110,7 +110,7 @@ const Pricing = () => {
               >
                 <h3 className="text-xl font-bold text-lime-600">{plan.name}</h3>
                 <div className="my-2">
-                  <span className="text-4xl font-bold">{plan.price}</span>
+                  <span className="text-4xl font-bold">{plan.price}</span> 
                 </div>
 
                 <p className="text-slate-400 mb-6">{plan.description}</p>
