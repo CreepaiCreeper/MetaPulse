@@ -59,7 +59,7 @@ const Pricing = () => {
 
       const data = await res.json();
 
-      if (data.URL) {
+      if (data.url) {
         window.location.href = data.url;
         return; 
       } else {
