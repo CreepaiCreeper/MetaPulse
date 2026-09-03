@@ -94,14 +94,14 @@ const Pricing = () => {
           <h2 className="text-2xl md:text-3xl font-bold text-slate-200 mb-2">
             Flexible Plans for Web Intelligence
           </h2>
-          <p className="text-slate-600  text-sm mt-0 md:text-base">
+          <p className="text-slate-600 text-sm md:text-base">
             Pick the plan that matches how you work — quick audits for solo
             projects, or full-scale analysis for teams shipping at volume.
           </p>
         </div>
 
         {/* pricing cards */}
-        <div className="w-full max-w-3xl mx-auto z-20">
+        <div className="w-full max-w-3xl mx-auto z-20 mt-20 md:mt-0">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
             {plans.map((plan) => (
               <div
@@ -110,7 +110,7 @@ const Pricing = () => {
               >
                 <h3 className="text-xl font-bold text-lime-600">{plan.name}</h3>
                 <div className="my-2">
-                  <span className="text-4xl font-bold">{plan.price}</span> 
+                  <span className="text-4xl font-bold">{plan.price}</span>
                 </div>
 
                 <p className="text-slate-400 mb-6">{plan.description}</p>
@@ -132,7 +132,7 @@ const Pricing = () => {
                           d="M5 13l4 4L19 7"
                         />
                       </svg>
-                      <span className="text-slate-600 ">{feature}</span>
+                      <span className="text-slate-600">{feature}</span>
                     </li>
                   ))}
                 </ul>
