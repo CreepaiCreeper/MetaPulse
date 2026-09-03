@@ -5,43 +5,43 @@ import React, { useState } from "react";
 const Pricing = () => {
   const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
 
-const plans = [
-  {
-    id: "starter",
-    name: "Starter Plan",
-    price: "$9",
-    credits: 150,
-    description:
-      "Essential toolkit for developers and site owners auditing core web metrics.",
-    features: [
-      "15 Detailed Page Audits",
-      "Lighthouse Performance Metrics",
-      "Broken Link & Redirect Detection",
-      "Core Web Vitals Breakdown",
-      "HTML Structure & DOM Inspection",
-      "Standard Email Support",
-    ],
-    highlighted: false,
-  },
-  {
-    id: "ultimate",
-    name: "Ultimate Plan",
-    price: "$29",
-    credits: 1000,
-    description:
-      "Advanced intelligence suite for technical teams and web agencies.",
-    features: [
-      "100 Detailed Page Audits",
-      "Security Headers & SSL Check",
-      "Competitor Performance Contrast",
-      "JavaScript Bundle Analysis",
-      "API Access for Raw Data",
-      "Priority Queue Processing",
-      "24/7 Dedicated Support",
-    ],
-    highlighted: true,
-  },
-];
+  const plans = [
+    {
+      id: "starter",
+      name: "Starter Plan",
+      price: "$9",
+      credits: 150,
+      description:
+        "Essential toolkit for developers and site owners auditing core web metrics.",
+      features: [
+        "15 Detailed Page Audits",
+        "Lighthouse Performance Metrics",
+        "Broken Link & Redirect Detection",
+        "Core Web Vitals Breakdown",
+        "HTML Structure & DOM Inspection",
+        "Standard Email Support",
+      ],
+      highlighted: false,
+    },
+    {
+      id: "ultimate",
+      name: "Ultimate Plan",
+      price: "$29",
+      credits: 1000,
+      description:
+        "Advanced intelligence suite for technical teams and web agencies.",
+      features: [
+        "100 Detailed Page Audits",
+        "Security Headers & SSL Check",
+        "Competitor Performance Contrast",
+        "JavaScript Bundle Analysis",
+        "API Access for Raw Data",
+        "Priority Queue Processing",
+        "24/7 Dedicated Support",
+      ],
+      highlighted: true,
+    },
+  ];
 
   const handlePurchase = async (planId: string) => {
     try {
@@ -101,7 +101,7 @@ const plans = [
         </div>
 
         {/* pricing cards */}
-        <div className="w-full max-w-3xl mx-auto z-20 md:mt-20">
+        <div className="w-full max-w-3xl mx-auto z-20 mt-10 md:mt-20">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
             {plans.map((plan) => (
               <div
