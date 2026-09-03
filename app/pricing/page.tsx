@@ -58,10 +58,15 @@ const Pricing = () => {
       }
 
       const data = await res.json();
-      console.log("Purchase success:", data);
+
+      if (data.URL) {
+        window.location.href = data.url;
+        return; 
+      } else {
+        throw new Error(data.error || "No checkout URL returned");
+      }
     } catch (err) {
       console.error("Purchase error:", err);
-    } finally {
       setLoadingPlan(null);
     }
   };

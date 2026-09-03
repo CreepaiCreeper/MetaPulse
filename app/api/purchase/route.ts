@@ -33,6 +33,12 @@ export async function POST(req: Request) {
       "http://localhost:3000";
 
     const session = await stripe.checkout.sessions.create({
+      // Managed Payments (default on new accounts) requires a tax_code on
+      // every product and auto-picks payment methods for you. We don't
+      // have tax codes set up, so we disable it for this session and go
+      // back to specifying payment_method_types ourselves.
+      // @ts-expect-error -- managed_payments isn't in this SDK version's types yet
+      managed_payments: { enabled: false },
       payment_method_types: ["card"],
       mode: "payment",
       line_items: [
