@@ -19,10 +19,14 @@ const navLinks = [
   { href: "/pricing", label: "Pricing", icon: CreditCard },
 ];
 
-const Navbar = () => {
+interface NavbarProps {
+  userTier?: string;
+}
+
+const Navbar = ({ userTier = "FREE" }: NavbarProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navRef = useRef<HTMLElement>(null);
-  
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (navRef.current && !navRef.current.contains(event.target as Node)) {
@@ -32,6 +36,47 @@ const Navbar = () => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  const renderBadge = () => {
+    const currentTier = userTier?.toUpperCase() || "FREE";
+
+    if (currentTier === "ULTIMATE") {
+      return (
+        <div className="flex items-center px-2 py-1 rounded-full border border-purple-500/50 bg-purple-500/10">
+          <span
+            className="text-purple-400 text-[11px] font-bold select-none tracking-wider"
+            style={{ textShadow: "0 0 8px rgba(168, 85, 247, 0.8)" }}
+          >
+            ULTIMATE
+          </span>
+        </div>
+      );
+    }
+
+    if (currentTier === "STARTER") {
+      return (
+        <div className="flex items-center px-2 py-1 rounded-full border border-blue-500/50 bg-blue-500/10">
+          <span
+            className="text-blue-400 text-[11px] font-bold select-none tracking-wider"
+            style={{ textShadow: "0 0 8px rgba(59, 130, 246, 0.8)" }}
+          >
+            STARTER
+          </span>
+        </div>
+      );
+    }
+
+    return (
+      <div className="flex items-center px-2 py-1 rounded-full border border-lime-600/50 bg-lime-600/10">
+        <span
+          className="text-lime-500 text-[11px] font-bold select-none tracking-wider"
+          style={{ textShadow: "0 0 8px rgba(132, 204, 22, 0.8)" }}
+        >
+          FREE
+        </span>
+      </div>
+    );
+  };
 
   return (
     <nav
@@ -57,6 +102,7 @@ const Navbar = () => {
           Meta<span className="text-lime-600 font-bold">Pulse</span>
         </span>
       </Link>
+
       <div className="hidden sm:flex items-center gap-2">
         {navLinks.map(({ href, label, icon: Icon }) => (
           <Link
@@ -69,6 +115,7 @@ const Navbar = () => {
           </Link>
         ))}
       </div>
+
       <div className="flex items-center gap-1">
         <div className="hidden sm:flex items-center gap-2 bg-[#171717] pl-1.5 pr-3 py-1.5 rounded-full border border-[#262626]">
           <img
@@ -80,14 +127,8 @@ const Navbar = () => {
             Takashi
           </span>
         </div>
-        <div className="hidden sm:flex items-center px-2 py-1 rounded-full border border-lime-600/50 bg-lime-600/10">
-          <span
-            className="text-lime-500 text-[11px] font-bold select-none tracking-wider"
-            style={{ textShadow: "0 0 8px rgba(132, 204, 22, 0.8)" }}
-          >
-            FREE
-          </span>
-        </div>
+
+        <div className="hidden sm:block">{renderBadge()}</div>
 
         <button className="hidden sm:flex items-center gap-2 text-xs font-semibold text-white/50 cursor-pointer hover:text-lime-600 hover:bg-[#171717] transition-colors px-3 py-2 rounded-full">
           <LogOut className="w-4 h-4" />
@@ -130,14 +171,7 @@ const Navbar = () => {
             <span className="text-white/60 text-sm font-medium select-none">
               Takashi
             </span>
-            <div className="flex items-center px-2 py-1 rounded-full border border-lime-600/50 bg-lime-600/10">
-              <span
-                className="text-lime-500 text-[11px] font-bold select-none tracking-wider"
-                style={{ textShadow: "0 0 8px rgba(132, 204, 22, 0.8)" }}
-              >
-                FREE
-              </span>
-            </div>
+            {renderBadge()}
           </div>
 
           <button className="flex items-center gap-3 text-sm font-semibold text-white/50 hover:text-lime-600 hover:bg-[#171717] transition-colors px-4 py-3 rounded-lg">
