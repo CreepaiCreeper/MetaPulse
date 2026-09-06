@@ -3,7 +3,7 @@ import React from "react";
 const page = () => {
   return (
     <div className="bg-[#030712] min-h-screen w-full flex flex-col items-center px-4">
-      <div className="flex flex-col items-center w-full max-w-4xl">
+      <div className="flex flex-col items-center w-full max-w-4xl mt-0 lg:mt-15">
         <div className="mt-12 sm:mt-16 lg:mt-20 flex gap-2 border border-lime-500/30 bg-lime-500/10 px-3 py-1.5 items-center rounded-full shadow-[0_0_15px_rgba(163,230,53,0.15)]">
           <svg
             className="w-4 h-4 text-lime-400 shrink-0 drop-shadow-[0_0_8px_rgba(163,230,53,0.8)]"

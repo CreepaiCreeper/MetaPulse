@@ -40,12 +40,12 @@ const Navbar = ({ userTier = "FREE" }: NavbarProps) => {
   const renderBadge = () => {
     const currentTier = userTier?.toUpperCase() || "FREE";
 
+    // Ultimate Tier Badge (Lime Glowing)
     if (currentTier === "ULTIMATE") {
       return (
-        <div className="flex items-center px-2 py-1 rounded-full border border-purple-500/50 bg-purple-500/10">
+        <div className="flex items-center px-2.5 py-1 rounded-full border border-lime-500/50 bg-lime-500/10 shadow-[0_0_12px_rgba(163,230,53,0.25)]">
           <span
-            className="text-purple-400 text-[11px] font-bold select-none tracking-wider"
-            style={{ textShadow: "0 0 8px rgba(168, 85, 247, 0.8)" }}
+            className="text-lime-400 text-[11px] font-extrabold select-none tracking-wider drop-shadow-[0_0_8px_rgba(163,230,53,0.8)]"
           >
             ULTIMATE
           </span>
@@ -53,12 +53,12 @@ const Navbar = ({ userTier = "FREE" }: NavbarProps) => {
       );
     }
 
+    // Starter Tier Badge (Lime Glowing)
     if (currentTier === "STARTER") {
       return (
-        <div className="flex items-center px-2 py-1 rounded-full border border-blue-500/50 bg-blue-500/10">
+        <div className="flex items-center px-2.5 py-1 rounded-full border border-lime-500/40 bg-lime-500/10 shadow-[0_0_10px_rgba(163,230,53,0.2)]">
           <span
-            className="text-blue-400 text-[11px] font-bold select-none tracking-wider"
-            style={{ textShadow: "0 0 8px rgba(59, 130, 246, 0.8)" }}
+            className="text-lime-400 text-[11px] font-bold select-none tracking-wider drop-shadow-[0_0_6px_rgba(163,230,53,0.7)]"
           >
             STARTER
           </span>
@@ -66,11 +66,11 @@ const Navbar = ({ userTier = "FREE" }: NavbarProps) => {
       );
     }
 
+    // Free Tier Badge (Lime Soft Glow)
     return (
-      <div className="flex items-center px-2 py-1 rounded-full border border-lime-600/50 bg-lime-600/10">
+      <div className="flex items-center px-2.5 py-1 rounded-full border border-lime-600/30 bg-lime-600/10">
         <span
-          className="text-lime-500 text-[11px] font-bold select-none tracking-wider"
-          style={{ textShadow: "0 0 8px rgba(132, 204, 22, 0.8)" }}
+          className="text-lime-500 text-[11px] font-bold select-none tracking-wider drop-shadow-[0_0_5px_rgba(132,204,22,0.6)]"
         >
           FREE
         </span>
@@ -86,7 +86,7 @@ const Navbar = ({ userTier = "FREE" }: NavbarProps) => {
       {/* 1. Logo */}
       <Link href="/" className="flex items-center gap-1.5 font-normal text-sm">
         <svg
-          className="w-6 h-6 text-lime-600"
+          className="w-6 h-6 text-lime-500 drop-shadow-[0_0_8px_rgba(163,230,53,0.5)]"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -99,7 +99,7 @@ const Navbar = ({ userTier = "FREE" }: NavbarProps) => {
           />
         </svg>
         <span className="text-white/90 font-semibold tracking-wide">
-          Meta<span className="text-lime-600 font-bold">Pulse</span>
+          Meta<span className="text-lime-500 font-bold">Pulse</span>
         </span>
       </Link>
 
@@ -108,16 +108,16 @@ const Navbar = ({ userTier = "FREE" }: NavbarProps) => {
           <Link
             key={href}
             href={href}
-            className="flex items-center gap-2 text-xs font-semibold text-[#a3a3a3] hover:text-lime-600 hover:bg-[#171717] transition-all duration-200 group px-3 py-2 rounded-full shadow-[0_0_20px_rgba(163,230,53,0.4)]"
+            className="flex items-center gap-2 text-xs font-semibold text-[#a3a3a3] hover:text-lime-400 hover:bg-[#171717] transition-all duration-200 group px-3 py-2 rounded-full shadow-[0_0_20px_rgba(163,230,53,0.4)]"
           >
-            <Icon className="w-4 h-4 text-[#a3a3a3] group-hover:text-lime-600 transition-colors" />
+            <Icon className="w-4 h-4 text-[#a3a3a3] group-hover:text-lime-400 transition-colors" />
             <span>{label}</span>
           </Link>
         ))}
       </div>
 
-      <div className="flex items-center gap-1">
-        <div className="hidden sm:flex items-center gap-2 bg-[#171717] pl-1.5 pr-3 py-1.5 rounded-full border border-[#262626]">
+      <div className="flex items-center gap-3">
+        <div className="hidden sm:flex items-center gap-1 bg-[#171717] pl-1.5 pr-3 py-1.5 rounded-full h-12 w-30 flex justify-center border border-[#262626] hover:shadow-[0_0_20px_rgba(163,230,53,0.4)] transition-all duration-200 cursor-pointer">
           <img
             src="reyna.jpeg"
             alt="Profile"
@@ -130,7 +130,7 @@ const Navbar = ({ userTier = "FREE" }: NavbarProps) => {
 
         <div className="hidden sm:block">{renderBadge()}</div>
 
-        <button className="hidden sm:flex items-center gap-2 text-xs font-semibold text-white/50 cursor-pointer hover:text-lime-600 hover:bg-[#171717] transition-colors px-3 py-2 rounded-full">
+        <button className="hidden sm:flex items-center gap-2 text-xs font-semibold text-white/50 cursor-pointer hover:text-lime-400 hover:bg-[#171717] transition-colors px-3 py-2 rounded-full">
           <LogOut className="w-4 h-4" />
           <span>Logout</span>
         </button>
@@ -145,7 +145,7 @@ const Navbar = ({ userTier = "FREE" }: NavbarProps) => {
           onClick={() => setIsMenuOpen((prev) => !prev)}
           aria-label="Toggle navigation menu"
           aria-expanded={isMenuOpen}
-          className="sm:hidden flex items-center justify-center w-9 h-9 rounded-full text-white/70 hover:text-lime-600 hover:bg-[#171717] transition-colors"
+          className="sm:hidden flex items-center justify-center w-9 h-9 rounded-full text-white/70 hover:text-lime-400 hover:bg-[#171717] transition-colors"
         >
           {isMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </button>
@@ -158,7 +158,7 @@ const Navbar = ({ userTier = "FREE" }: NavbarProps) => {
               key={href}
               href={href}
               onClick={() => setIsMenuOpen(false)}
-              className="flex items-center gap-3 text-sm font-semibold text-[#a3a3a3] hover:text-lime-600 hover:bg-[#171717] transition-colors px-4 py-3 rounded-lg"
+              className="flex items-center gap-3 text-sm font-semibold text-[#a3a3a3] hover:text-lime-400 hover:bg-[#171717] transition-colors px-4 py-3 rounded-lg"
             >
               <Icon className="w-4 h-4" />
               <span>{label}</span>
@@ -167,14 +167,14 @@ const Navbar = ({ userTier = "FREE" }: NavbarProps) => {
 
           <div className="h-px bg-[#262626] my-1" />
 
-          <div className="flex items-center justify-between px-4 py-2">
-            <span className="text-white/60 text-sm font-medium select-none">
+          <div className="flex items-center justify-between px-4 py-2 ">
+            <span className="text-white/60 text-sm font-medium select-none ">
               Takashi
             </span>
             {renderBadge()}
           </div>
 
-          <button className="flex items-center gap-3 text-sm font-semibold text-white/50 hover:text-lime-600 hover:bg-[#171717] transition-colors px-4 py-3 rounded-lg">
+          <button className="flex items-center gap-3 text-sm font-semibold text-white/50 hover:text-lime-400 hover:bg-[#171717] transition-colors px-4 py-3 rounded-lg">
             <LogOut className="w-4 h-4" />
             <span>Logout</span>
           </button>
