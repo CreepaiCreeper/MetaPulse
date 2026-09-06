@@ -108,7 +108,7 @@ const Navbar = ({ userTier = "FREE" }: NavbarProps) => {
           <Link
             key={href}
             href={href}
-            className="flex items-center gap-2 text-xs font-semibold text-[#a3a3a3] hover:text-lime-600 hover:bg-[#171717] transition-colors group px-3 py-2 rounded-full"
+            className="flex items-center gap-2 text-xs font-semibold text-[#a3a3a3] hover:text-lime-600 hover:bg-[#171717] transition-all duration-200 group px-3 py-2 rounded-full shadow-[0_0_20px_rgba(163,230,53,0.4)]"
           >
             <Icon className="w-4 h-4 text-[#a3a3a3] group-hover:text-lime-600 transition-colors" />
             <span>{label}</span>

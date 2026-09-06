@@ -61,7 +61,7 @@ const Pricing = () => {
 
       if (data.url) {
         window.location.href = data.url;
-        return; 
+        return;
       } else {
         throw new Error(data.error || "No checkout URL returned");
       }
@@ -72,13 +72,13 @@ const Pricing = () => {
   };
 
   return (
-    <div className="h-screen w-full flex flex-col overflow-auto">
-      <Navbar />
-      <div className="flex-1 min-h-0 w-full bg-[#030712] flex flex-col items-center justify-center gap-6 px-4 select-none">
-        {/* logo */}
-        <div className="flex items-center gap-1.5 font-normal">
+    <div className="min-h-screen w-full bg-[#030712] flex flex-col justify-between overflow-y-auto">
+
+      <div className="flex-1 w-full max-w-5xl mx-auto flex flex-col items-center justify-center py-12 px-4 select-none">
+        {/* Logo Section */}
+        <div className="flex items-center gap-2 mb-6">
           <svg
-            className="w-11 h-11 text-lime-600"
+            className="w-10 h-10 text-lime-400 drop-shadow-[0_0_15px_rgba(163,230,53,0.5)]"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -91,41 +91,60 @@ const Pricing = () => {
             />
           </svg>
           <span className="text-white/90 font-semibold tracking-wide text-2xl">
-            Meta<span className="text-lime-600 font-bold">Pulse</span>
+            Meta<span className="text-lime-400 font-bold">Pulse</span>
           </span>
         </div>
 
-        <div className="text-center max-w-xl">
-          <h2 className="text-2xl md:text-3xl font-bold text-slate-200 mb-2">
+        {/* Heading & Subtitle */}
+        <div className="text-center max-w-xl mb-12">
+          <h2 className="text-3xl sm:text-4xl font-bold text-lime-400 select-none text-center drop-shadow-[0_0_25px_rgba(163,230,53,0.35)] mb-3">
             Flexible Plans for Web Intelligence
           </h2>
-          <p className="text-slate-600 text-sm md:text-base">
+          <p className="text-white/40 text-sm md:text-base leading-relaxed">
             Pick the plan that matches how you work — quick audits for solo
             projects, or full-scale analysis for teams shipping at volume.
           </p>
         </div>
 
-        {/* pricing cards */}
-        <div className="w-full max-w-3xl mx-auto z-20 mt-20 md:mt-0">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
+        {/* Pricing Cards Container */}
+        <div className="w-full max-w-3xl">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
             {plans.map((plan) => (
               <div
                 key={plan.id}
-                className="flex flex-col p-6 bg-black/20 ring ring-green-900 mx-auto w-full max-w-sm rounded-lg text-white shadow-lg hover:ring-green-500 transition-all duration-400"
+                className={`relative flex flex-col p-7 rounded-2xl bg-[#0a0f1d]/80 border transition-all duration-300 ${
+                  plan.highlighted
+                    ? "border-lime-500/50 shadow-[0_0_30px_rgba(163,230,53,0.15)]"
+                    : "border-lime-500/20 hover:border-lime-500/40 shadow-[0_0_15px_rgba(163,230,53,0.05)]"
+                }`}
               >
-                <h3 className="text-xl font-bold text-lime-600">{plan.name}</h3>
-                <div className="my-2">
-                  <span className="text-4xl font-bold">{plan.price}</span>
+                {/* Popular Badge for Highlighted Plan */}
+                {plan.highlighted && (
+                  <span className="absolute -top-3 right-6 px-3 py-0.5 rounded-full bg-lime-500/10 border border-lime-500/40 text-lime-400 text-[10px] font-semibold tracking-wider uppercase shadow-[0_0_10px_rgba(163,230,53,0.2)]">
+                    Most Popular
+                  </span>
+                )}
+
+                <h3 className="text-xl font-bold text-lime-400 drop-shadow-[0_0_15px_rgba(163,230,53,0.3)]">
+                  {plan.name}
+                </h3>
+
+                <div className="my-3 flex items-baseline gap-1">
+                  <span className="text-4xl text-white/90 font-extrabold tracking-tight">
+                    {plan.price}
+                  </span>
+                  <span className="text-white/40 text-xs">/ one-time</span>
                 </div>
 
-                <p className="text-slate-400 mb-6">{plan.description}</p>
+                <p className="text-white/60 text-sm mb-6 min-h-[40px]">
+                  {plan.description}
+                </p>
 
-                <ul className="space-y-1.5 mb-6 text-sm">
+                <ul className="space-y-2.5 mb-8 text-sm flex-1">
                   {plan.features.map((feature, i) => (
-                    <li key={i} className="flex items-center">
+                    <li key={i} className="flex items-center gap-2.5">
                       <svg
-                        className="h-5 w-5 text-green-400 mr-2 flex-shrink-0"
-                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-4 w-4 text-lime-400 shrink-0 drop-shadow-[0_0_6px_rgba(163,230,53,0.6)]"
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor"
@@ -133,19 +152,22 @@ const Pricing = () => {
                         <path
                           strokeLinecap="round"
                           strokeLinejoin="round"
-                          strokeWidth="2"
+                          strokeWidth="2.5"
                           d="M5 13l4 4L19 7"
                         />
                       </svg>
-                      <span className="text-slate-600">{feature}</span>
+                      <span className="text-white/40 text-xs sm:text-sm">
+                        {feature}
+                      </span>
                     </li>
                   ))}
                 </ul>
 
+                {/* Clean Glowing CTA Button */}
                 <button
                   onClick={() => handlePurchase(plan.id)}
                   disabled={loadingPlan === plan.id}
-                  className="mt-auto w-full py-2 px-4 bg-green-600 hover:bg-green-700 active:scale-95 text-sm font-medium rounded-md transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer text-black"
+                  className="mt-auto w-full py-3 px-4 bg-lime-500 hover:bg-lime-400 text-black font-bold text-sm tracking-wide rounded-xl shadow-[0_0_15px_rgba(163,230,53,0.35)] hover:shadow-[0_0_25px_rgba(163,230,53,0.6)] active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 cursor-pointer"
                 >
                   {loadingPlan === plan.id ? "Processing..." : "Buy Now"}
                 </button>
