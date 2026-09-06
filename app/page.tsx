@@ -23,7 +23,7 @@ const page = () => {
           </span>
         </div>
 
-        <h1 className=" sm:text-5xl lg:text-6xl text-lime-400 mt-6 select-none text-center drop-shadow-[0_0_35px_rgba(163,230,53,0.35)]">
+        <h1 className=" text-3xl sm:text-5xl lg:text-6xl text-lime-400 mt-6 select-none text-center drop-shadow-[0_0_35px_rgba(163,230,53,0.35)]">
           Analyze & Boost Your{" "}
         </h1>
         <span className="font-bold text-3xl sm:text-5xl lg:text-6xl text-lime-500 mt-2 select-none text-center drop-shadow-[0_0_35px_rgba(132,204,22,0.35)]">
