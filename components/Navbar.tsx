@@ -108,7 +108,7 @@ const Navbar = ({ userTier = "FREE" }: NavbarProps) => {
           <Link
             key={href}
             href={href}
-            className="flex items-center gap-2 text-xs font-semibold text-[#a3a3a3] hover:text-lime-400 hover:bg-[#171717] transition-all duration-200 group px-3 py-2 rounded-full shadow-[0_0_20px_rgba(163,230,53,0.4)]"
+            className="flex items-center gap-2 text-xs font-semibold text-[#a3a3a3] hover:text-lime-400 hover:bg-[#171717] transition-all duration-200 group px-3 py-2 rounded-full shadow-[0_0_20px_rgba(163,230,53,0.4)] transform-gpu will-change-transform"
           >
             <Icon className="w-4 h-4 text-[#a3a3a3] group-hover:text-lime-400 transition-colors" />
             <span>{label}</span>
@@ -117,7 +117,7 @@ const Navbar = ({ userTier = "FREE" }: NavbarProps) => {
       </div>
 
       <div className="flex items-center gap-3">
-        <div className="hidden sm:flex items-center gap-1 bg-[#171717] pl-1.5 pr-3 py-1.5 rounded-full h-12 w-30 flex justify-center border border-[#262626] hover:shadow-[0_0_20px_rgba(163,230,53,0.4)] transition-all duration-200 cursor-pointer">
+        <div className="hidden sm:flex items-center gap-1 bg-[#171717] pl-1.5 pr-3 py-1.5 rounded-full h-12 w-30 flex justify-center border border-[#262626] hover:shadow-[0_0_20px_rgba(163,230,53,0.4)] transition-all duration-200 transform-gpu will-change-transform cursor-pointer">
           <img
             src="reyna.jpeg"
             alt="Profile"
@@ -130,7 +130,7 @@ const Navbar = ({ userTier = "FREE" }: NavbarProps) => {
 
         <div className="hidden sm:block">{renderBadge()}</div>
 
-        <button className="hidden sm:flex items-center gap-2 text-xs font-semibold text-white/50 cursor-pointer hover:text-lime-400 hover:bg-[#171717] transition-colors px-3 py-2 rounded-full">
+        <button className="hidden sm:flex items-center gap-2 text-xs font-semibold text-white/50 cursor-pointer hover:text-lime-400 hover:bg-[#171717] transition-colors px-3 py-2 rounded-full transform-gpu will-change-transform">
           <LogOut className="w-4 h-4" />
           <span>Logout</span>
         </button>

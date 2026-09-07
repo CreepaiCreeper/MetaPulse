@@ -78,7 +78,7 @@ const Pricing = () => {
         {/* Logo Section */}
         <div className="flex items-center gap-2 mb-6">
           <svg
-            className="w-10 h-10 text-lime-400 drop-shadow-[0_0_15px_rgba(163,230,53,0.5)]"
+            className="w-10 h-10 text-lime-400 drop-shadow-[0_0_15px_rgba(163,230,53,0.5)] transform-gpu will-change-transform"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -97,7 +97,7 @@ const Pricing = () => {
 
         {/* Heading & Subtitle */}
         <div className="text-center max-w-xl mb-12">
-          <h2 className="text-3xl sm:text-4xl font-bold text-lime-400 select-none text-center drop-shadow-[0_0_25px_rgba(163,230,53,0.35)] mb-3">
+          <h2 className="text-3xl sm:text-4xl font-bold text-lime-400 select-none text-center drop-shadow-[0_0_25px_rgba(163,230,53,0.35)] mb-3 transform-gpu will-change-transform">
             Flexible Plans for Web Intelligence
           </h2>
           <p className="text-white/40 text-sm md:text-base leading-relaxed">
@@ -115,17 +115,17 @@ const Pricing = () => {
                 className={`relative flex flex-col p-7 rounded-2xl bg-[#0a0f1d]/80 border transition-all duration-300 ${
                   plan.highlighted
                     ? "border-lime-500/50 shadow-[0_0_30px_rgba(163,230,53,0.15)]"
-                    : "border-lime-500/20 hover:border-lime-500/40 shadow-[0_0_15px_rgba(163,230,53,0.05)]"
+                    : "border-lime-500/20 hover:border-lime-500/40 shadow-[0_0_15px_rgba(163,230,53,0.05) transform-gpu will-change-transform"
                 }`}
               >
                 {/* Popular Badge for Highlighted Plan */}
                 {plan.highlighted && (
-                  <span className="absolute -top-3 right-6 px-3 py-0.5 rounded-full bg-lime-500/10 border border-lime-500/40 text-lime-400 text-[10px] font-semibold tracking-wider uppercase shadow-[0_0_10px_rgba(163,230,53,0.2)]">
+                  <span className="absolute -top-3 right-6 px-3 py-0.5 rounded-full bg-lime-500/10 border border-lime-500/40 text-lime-400 text-[10px] font-semibold tracking-wider uppercase shadow-[0_0_10px_rgba(163,230,53,0.2)] transform-gpu will-change-transform">
                     Most Popular
                   </span>
                 )}
 
-                <h3 className="text-xl font-bold text-lime-400 drop-shadow-[0_0_15px_rgba(163,230,53,0.3)]">
+                <h3 className="text-xl font-bold text-lime-400 drop-shadow-[0_0_15px_rgba(163,230,53,0.3)] transform-gpu will-change-transform">
                   {plan.name}
                 </h3>
 
@@ -144,7 +144,7 @@ const Pricing = () => {
                   {plan.features.map((feature, i) => (
                     <li key={i} className="flex items-center gap-2.5">
                       <svg
-                        className="h-4 w-4 text-lime-400 shrink-0 drop-shadow-[0_0_6px_rgba(163,230,53,0.6)]"
+                        className="h-4 w-4 text-lime-400 shrink-0 drop-shadow-[0_0_6px_rgba(163,230,53,0.6)] transform-gpu will-change-transform"
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor"
@@ -167,7 +167,7 @@ const Pricing = () => {
                 <button
                   onClick={() => handlePurchase(plan.id)}
                   disabled={loadingPlan === plan.id}
-                  className="mt-auto w-full py-3 px-4 bg-lime-500 hover:bg-lime-400 text-black font-bold text-sm tracking-wide rounded-xl shadow-[0_0_15px_rgba(163,230,53,0.35)] hover:shadow-[0_0_25px_rgba(163,230,53,0.6)] active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 cursor-pointer"
+                  className="mt-auto w-full py-3 px-4 bg-lime-500 hover:bg-lime-400 text-black font-bold text-sm tracking-wide rounded-xl shadow-[0_0_15px_rgba(163,230,53,0.35)] hover:shadow-[0_0_25px_rgba(163,230,53,0.6)] active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 cursor-pointer transform-gpu will-change-transform"
                 >
                   {loadingPlan === plan.id ? "Processing..." : "Buy Now"}
                 </button>

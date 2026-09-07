@@ -4,9 +4,9 @@ const page = () => {
   return (
     <div className="bg-[#030712] min-h-screen w-full flex flex-col items-center px-4">
       <div className="flex flex-col items-center w-full max-w-4xl mt-0 lg:mt-15">
-        <div className="mt-12 sm:mt-16 lg:mt-20 flex gap-2 border border-lime-500/30 bg-lime-500/10 px-3 py-1.5 items-center rounded-full shadow-[0_0_15px_rgba(163,230,53,0.15)]">
+        <div className="mt-12 sm:mt-16 lg:mt-20 flex gap-2 border border-lime-500/30 bg-lime-500/10 px-3 py-1.5 items-center rounded-full shadow-[0_0_15px_rgba(163,230,53,0.15)] transform-gpu will-change-transform">
           <svg
-            className="w-4 h-4 text-lime-400 shrink-0 drop-shadow-[0_0_8px_rgba(163,230,53,0.8)]"
+            className="w-4 h-4 text-lime-400 shrink-0 drop-shadow-[0_0_8px_rgba(163,230,53,0.8)] transform-gpu will-change-transform"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -23,10 +23,10 @@ const page = () => {
           </span>
         </div>
 
-        <h1 className=" text-3xl sm:text-5xl lg:text-6xl text-lime-400 mt-6 select-none text-center drop-shadow-[0_0_35px_rgba(163,230,53,0.35)]">
+        <h1 className=" text-3xl sm:text-5xl lg:text-6xl text-lime-400 mt-6 select-none text-center drop-shadow-[0_0_35px_rgba(163,230,53,0.35)] transform-gpu will-change-transform">
           Analyze & Boost Your{" "}
         </h1>
-        <span className="font-bold text-3xl sm:text-5xl lg:text-6xl text-lime-500 mt-2 select-none text-center drop-shadow-[0_0_35px_rgba(132,204,22,0.35)]">
+        <span className="font-bold text-3xl sm:text-5xl lg:text-6xl text-lime-500 mt-2 select-none text-center drop-shadow-[0_0_35px_rgba(132,204,22,0.35)] transform-gpu will-change-transform">
           SEO Rankings
         </span>
 
@@ -40,7 +40,7 @@ const page = () => {
 
         {/* Input box */}
         <div className="mt-8 w-full max-w-2xl px-2">
-          <div className="relative flex flex-col sm:flex-row items-center gap-2 p-1.5 rounded-2xl sm:rounded-full bg-[#0a0f1d]/80 border border-lime-500/30 shadow-[0_0_25px_rgba(163,230,53,0.15)] focus-within:border-lime-400 focus-within:shadow-[0_0_35px_rgba(163,230,53,0.3)] transition-all duration-300">
+          <div className="relative flex flex-col sm:flex-row items-center gap-2 p-1.5 rounded-2xl sm:rounded-full bg-[#0a0f1d]/80 border border-lime-500/30 shadow-[0_0_25px_rgba(163,230,53,0.15)] focus-within:border-lime-400 focus-within:shadow-[0_0_35px_rgba(163,230,53,0.3)] transition-all duration-300 transform-gpu will-change-transform">
             {/* Input Box */}
             <input
               type="url"
@@ -51,7 +51,7 @@ const page = () => {
             {/* Glow Action Button */}
             <button
               type="button"
-              className="w-full sm:w-auto shrink-0 flex items-center justify-center gap-2 px-6 py-3 rounded-xl sm:rounded-full bg-lime-500 hover:bg-lime-400 text-black font-bold text-sm tracking-wide shadow-[0_0_20px_rgba(163,230,53,0.4)] hover:shadow-[0_0_30px_rgba(163,230,53,0.7)] active:scale-95 transition-all duration-200 cursor-pointer"
+              className="w-full sm:w-auto shrink-0 flex items-center justify-center gap-2 px-6 py-3 rounded-xl sm:rounded-full bg-lime-500 hover:bg-lime-400 text-black font-bold text-sm tracking-wide shadow-[0_0_20px_rgba(163,230,53,0.4)] hover:shadow-[0_0_30px_rgba(163,230,53,0.7)] active:scale-95 transition-all duration-200 cursor-pointer transform-gpu will-change-transform"
             >
               <span>Analyze Site</span>
               <svg
