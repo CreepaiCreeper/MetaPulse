@@ -184,7 +184,7 @@ const Page = () => {
           actionable insights to scale your online presence.
         </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full select-none">
           {features.map((item, index) => {
             const IconComponent = item.Icon;
             return (
@@ -218,7 +218,7 @@ const Page = () => {
         </p>
 
         {/*Pricing */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full items-stretch">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full items-stretch select-none">
           {plans.map((plan) => (
             <div
               key={plan.id}
