@@ -1,5 +1,5 @@
 "use client";
-import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 import React, { useState } from "react";
 
 const Pricing = () => {
@@ -175,6 +175,11 @@ const Pricing = () => {
             ))}
           </div>
         </div>
+      </div>
+
+      {/* Footer */}
+      <div className="bottom-0 w-full">
+        <Footer/>
       </div>
     </div>
   );

@@ -40,7 +40,7 @@ const Navbar = ({ userTier = "FREE" }: NavbarProps) => {
   const renderBadge = () => {
     const currentTier = userTier?.toUpperCase() || "FREE";
 
-    // Ultimate Tier Badge (Lime Glowing)
+    // Ultimate Tier 
     if (currentTier === "ULTIMATE") {
       return (
         <div className="flex items-center px-2.5 py-1 rounded-full border border-lime-500/50 bg-lime-500/10 shadow-[0_0_12px_rgba(163,230,53,0.25)]">
@@ -53,7 +53,7 @@ const Navbar = ({ userTier = "FREE" }: NavbarProps) => {
       );
     }
 
-    // Starter Tier Badge (Lime Glowing)
+    // Starter Tier 
     if (currentTier === "STARTER") {
       return (
         <div className="flex items-center px-2.5 py-1 rounded-full border border-lime-500/40 bg-lime-500/10 shadow-[0_0_10px_rgba(163,230,53,0.2)]">
@@ -66,7 +66,7 @@ const Navbar = ({ userTier = "FREE" }: NavbarProps) => {
       );
     }
 
-    // Free Tier Badge (Lime Soft Glow)
+    // Free Tier
     return (
       <div className="flex items-center px-2.5 py-1 rounded-full border border-lime-600/30 bg-lime-600/10">
         <span
@@ -86,7 +86,7 @@ const Navbar = ({ userTier = "FREE" }: NavbarProps) => {
       {/* 1. Logo */}
       <Link href="/" className="flex items-center gap-1.5 font-normal text-sm">
         <svg
-          className="w-6 h-6 text-lime-500 drop-shadow-[0_0_8px_rgba(163,230,53,0.5)]"
+          className="w-8 h-8 text-lime-500 drop-shadow-[0_0_8px_rgba(163,230,53,0.5)] transform-gpu will-change-transform"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -98,8 +98,8 @@ const Navbar = ({ userTier = "FREE" }: NavbarProps) => {
             d="M12 2L2 12l10 10 10-10L12 2zM8 12h2l1-3 2 6 1-3h2"
           />
         </svg>
-        <span className="text-white/90 font-semibold tracking-wide">
-          Meta<span className="text-lime-500 font-bold">Pulse</span>
+        <span className="text-white/90 font-semibold tracking-wide text-2xl drop-shadow-[0_0_8px_rgba(163,230,53,0.5)] transform-gpu will-change-transform">
+          Meta<span className="text-lime-500 font-bold ">Pulse</span>
         </span>
       </Link>
 
