@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { Search, ExternalLink, Trash2, Clock } from "lucide-react";
+import { Search, ExternalLink, Trash2, Clock, Plus } from "lucide-react";
 
 const Page = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -79,9 +79,9 @@ const Page = () => {
       {/* Main Container */}
       <main className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex-1">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-8 border-b border-white/10">
+        <div className="flex items-center justify-between gap-4 pb-8 border-b border-white/10">
           <div className="flex flex-col gap-1 text-left">
-            <h1 className="text-2xl sm:text-4xl font-bold text-white tracking-tight select-none">
+            <h1 className="text-2xl sm:text-4xl font-bold text-lime-400 drop-shadow-[0_0_20px_rgba(163,230,53,0.35)] tracking-tight select-none">
               Your{" "}
               <span className="text-lime-400 drop-shadow-[0_0_20px_rgba(163,230,53,0.35)]">
                 History
@@ -92,15 +92,16 @@ const Page = () => {
             </p>
           </div>
 
-          {/* New Analysis Button */}
+          {/* New Analysis Button - Compact on Mobile/Tablet, Full Size on PC (lg+) */}
           <Link href="/analyze">
             <button
               type="button"
-              className="w-full sm:w-auto shrink-0 flex items-center justify-center gap-2 px-6 py-2 rounded-full bg-lime-500 hover:bg-lime-400 text-black font-bold text-xs sm:text-sm tracking-wide shadow-[0_0_20px_rgba(163,230,53,0.5)] active:scale-95 transition-all duration-200 cursor-pointer"
+              className="shrink-0 flex items-center justify-center gap-2 p-2.5 lg:px-6 lg:py-2 rounded-full bg-lime-500 hover:bg-lime-400 text-black font-bold text-xs lg:text-sm tracking-wide shadow-[0_0_20px_rgba(163,230,53,0.5)] active:scale-95 transition-all duration-200 cursor-pointer"
             >
-              <span>New Analysis</span>
+              {/* PC / Desktop View */}
+              <span className="hidden lg:inline">New Analysis</span>
               <svg
-                className="w-4 h-4 text-black"
+                className="hidden lg:block w-4 h-4 text-black"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -112,6 +113,9 @@ const Page = () => {
                   d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
                 />
               </svg>
+
+              {/* Mobile & Tablet View */}
+              <Plus className="block lg:hidden w-4 h-4 stroke-[3]" />
             </button>
           </Link>
         </div>
@@ -205,7 +209,7 @@ const Page = () => {
                 </div>
 
                 <div className="flex items-center justify-between md:justify-end w-full md:w-auto gap-6 sm:gap-8 pt-3 md:pt-0 border-t md:border-t-0 border-white/5">
-                  {/* Scores Grid */}
+                  {/* Scores*/}
                   <div className="flex items-center gap-4 sm:gap-6 text-center">
                     <div>
                       <div className={`font-bold text-sm ${seoColor.text}`}>
@@ -241,7 +245,7 @@ const Page = () => {
                     </div>
                   </div>
 
-                  {/* Action Icons */}
+                  {/* Icons */}
                   <div className="flex items-center gap-2 pl-2 border-l border-white/10">
                     <a
                       href={item.url}
