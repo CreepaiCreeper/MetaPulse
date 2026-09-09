@@ -87,18 +87,16 @@ const Page = () => {
                 History
               </span>
             </h1>
-            <p className="text-white/50 text-xs sm:text-sm select-none">
+            <p className="text-white/40 text-xs sm:text-sm select-none">
               View and manage all your past site analysis records.
             </p>
           </div>
 
-          {/* New Analysis Button - Compact on Mobile/Tablet, Full Size on PC (lg+) */}
           <Link href="/analyze">
             <button
               type="button"
               className="shrink-0 flex items-center justify-center gap-2 p-2.5 lg:px-6 lg:py-2 rounded-full bg-lime-500 hover:bg-lime-400 text-black font-bold text-xs lg:text-sm tracking-wide shadow-[0_0_20px_rgba(163,230,53,0.5)] active:scale-95 transition-all duration-200 cursor-pointer"
             >
-              {/* PC / Desktop View */}
               <span className="hidden lg:inline">New Analysis</span>
               <svg
                 className="hidden lg:block w-4 h-4 text-black"
@@ -114,7 +112,6 @@ const Page = () => {
                 />
               </svg>
 
-              {/* Mobile & Tablet View */}
               <Plus className="block lg:hidden w-4 h-4 stroke-[3]" />
             </button>
           </Link>
@@ -134,7 +131,6 @@ const Page = () => {
           </div>
         </div>
 
-        {/* History Cards Container */}
         <div className="mt-8 flex flex-col gap-4">
           {filteredData.map((item) => {
             const overallColor = getScoreColor(item.overallScore);
@@ -209,7 +205,7 @@ const Page = () => {
                 </div>
 
                 <div className="flex items-center justify-between md:justify-end w-full md:w-auto gap-6 sm:gap-8 pt-3 md:pt-0 border-t md:border-t-0 border-white/5">
-                  {/* Scores*/}
+
                   <div className="flex items-center gap-4 sm:gap-6 text-center">
                     <div>
                       <div className={`font-bold text-sm ${seoColor.text}`}>

@@ -22,7 +22,7 @@ const Analyze = () => {
           <span className="font-bold text-3xl sm:text-5xl lg:text-6xl text-lime-400 mt-2 select-none text-center drop-shadow-[0_0_35px_rgba(132,204,22,0.35)] transform-gpu will-change-transform">
             Audit & Intelligence
           </span>
-          <p className="text-white/60 mt-4 text-xs sm:text-sm md:text-base max-w-xl sm:max-w-2xl leading-relaxed select-none">
+          <p className="text-white/40 mt-4 text-xs sm:text-sm md:text-base max-w-xl sm:max-w-2xl leading-relaxed select-none">
             Run deep real-time audits on any web page. Analyze Core Web Vitals,
             HTML structural integrity, security headers, and performance
             bottlenecks in seconds.
