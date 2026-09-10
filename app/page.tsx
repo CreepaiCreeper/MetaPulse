@@ -1,5 +1,6 @@
 import React from "react";
 import { HomeWave } from "./assets/page";
+import Link from "next/link";
 import {
   Check,
   FileCode2,
@@ -258,16 +259,18 @@ const Page = () => {
                 </ul>
               </div>
 
-              <button
-                type="button"
-                className={`w-full py-3.5 rounded-2xl font-bold text-sm tracking-wide transition-all duration-200 cursor-pointer ${
-                  plan.highlighted
-                    ? "bg-lime-400 hover:bg-lime-300 text-black shadow-[0_0_20px_rgba(163,230,53,0.4)]"
-                    : "bg-lime-500/10 hover:bg-lime-500/20 text-lime-400 border border-lime-500/30"
-                }`}
-              >
-                {plan.ctaText}
-              </button>
+              <Link href="/pricing">
+                <button
+                  type="button"
+                  className={`w-full py-3.5 rounded-2xl font-bold text-sm tracking-wide transition-all duration-200 cursor-pointer ${
+                    plan.highlighted
+                      ? "bg-lime-400 hover:bg-lime-300 text-black shadow-[0_0_20px_rgba(163,230,53,0.4)]"
+                      : "bg-lime-500/10 hover:bg-lime-500/20 text-lime-400 border border-lime-500/30"
+                  }`}
+                >
+                  {plan.ctaText}
+                </button>
+              </Link>
             </div>
           ))}
         </div>

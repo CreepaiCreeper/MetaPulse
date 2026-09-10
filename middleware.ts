@@ -2,11 +2,10 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 export function middleware(req: NextRequest) {
-  const token = req.cookies.get("token")?.value; 
+  const token = req.cookies.get("token")?.value;
   const { pathname } = req.nextUrl;
 
   const protectedRoutes = ["/dashboard", "/profile", "/settings"];
-
   const authRoutes = ["/login", "/signup", "/forgot-password", "/reset-password"];
 
   const isProtectedRoute = protectedRoutes.some((route) =>
@@ -16,7 +15,7 @@ export function middleware(req: NextRequest) {
 
   if (isProtectedRoute && !token) {
     const loginUrl = new URL("/login", req.url);
-    loginUrl.searchParams.set("callbackUrl", pathname); 
+    loginUrl.searchParams.set("callbackUrl", pathname);
     return NextResponse.redirect(loginUrl);
   }
 
