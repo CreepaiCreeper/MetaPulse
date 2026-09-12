@@ -1,6 +1,9 @@
-import React from "react";
+"use client";
+
+import React, { useState, useEffect } from "react";
 import { HomeWave } from "./assets/page";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   Check,
   FileCode2,
@@ -9,10 +12,50 @@ import {
   Smartphone,
   Sparkles,
   Zap,
+  Loader2,
 } from "lucide-react";
 import Footer from "@/components/Footer";
 
 const Page = () => {
+  const [urlInput, setUrlInput] = useState("");
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [currentStep, setCurrentStep] = useState(0);
+  const [error, setError] = useState("");
+  const router = useRouter();
+
+  const analysisSteps = [
+    "Connecting to site...",
+    "Extracting HTML & Meta Tags...",
+    "Running AI SEO Analysis...",
+    "Generating Final Report...",
+  ];
+
+  // Steps Interval Effect
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (isAnalyzing) {
+      setCurrentStep(0);
+      interval = setInterval(() => {
+        setCurrentStep((prev) => {
+          if (prev < analysisSteps.length - 1) return prev + 1;
+          return prev;
+        });
+      }, 2500);
+    }
+    return () => clearInterval(interval);
+  }, [isAnalyzing]);
+
+  useEffect(() => {
+    if (isAnalyzing) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [isAnalyzing]);
+
   const features = [
     {
       Icon: SearchCheck,
@@ -46,14 +89,46 @@ const Page = () => {
     },
   ];
 
+  const handleAnalyze = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!urlInput.trim()) return;
+
+    setIsAnalyzing(true);
+    setError("");
+
+    try {
+      const res = await fetch("/api/scan", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url: urlInput }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        throw new Error(data.message || "Failed to analyze website");
+      }
+
+      if (data.scan && data.scan.id) {
+        router.push(`/report/${data.scan.id}`);
+      }
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Something went wrong");
+      }
+      setIsAnalyzing(false);
+    }
+  };
+
   const plans = [
     {
       id: "free",
       name: "Free Tier",
       price: "$0",
       type: "forever",
-      description:
-        "Quick daily checks for individual site owners and casual testing.",
+      description: "Quick daily checks for individual site owners and casual testing.",
       features: [
         "5 Free Analyses Per Day",
         "Basic SEO Score Overview",
@@ -69,8 +144,7 @@ const Page = () => {
       name: "Starter Plan",
       price: "$9",
       type: "one-time",
-      description:
-        "Essential toolkit for developers and site owners auditing core web metrics.",
+      description: "Essential toolkit for developers and site owners auditing core web metrics.",
       features: [
         "15 Detailed Page Audits",
         "Lighthouse Performance Metrics",
@@ -87,8 +161,7 @@ const Page = () => {
       name: "Ultimate Plan",
       price: "$29",
       type: "one-time",
-      description:
-        "Advanced intelligence suite for technical teams and web agencies.",
+      description: "Advanced intelligence suite for technical teams and web agencies.",
       features: [
         "100 Detailed Page Audits",
         "Security Headers & SSL Check",
@@ -105,7 +178,58 @@ const Page = () => {
   ];
 
   return (
-    <div className="bg-[#030712] min-h-screen w-full flex flex-col items-center px-4 pb-24">
+    <div className="bg-[#030712] min-h-screen w-full flex flex-col items-center px-4 pb-24 relative">
+      {isAnalyzing && (
+        <div className="fixed inset-0 z-50 bg-[#030712]/90 backdrop-blur-md flex flex-col items-center justify-center p-4">
+          <div className="p-8 sm:p-10 rounded-3xl bg-[#0a0f1d] border-2 border-lime-400/80 shadow-[0_0_60px_rgba(163,230,53,0.35)] max-w-md w-full flex flex-col items-center text-center relative overflow-hidden transition-all">
+            <div className="absolute -top-10 -left-10 w-32 h-32 bg-lime-500/20 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-lime-500/20 rounded-full blur-3xl pointer-events-none" />
+            
+            <div className="relative flex items-center justify-center mb-6">
+              <Loader2 className="w-14 h-14 text-lime-400 animate-spin drop-shadow-[0_0_20px_rgba(163,230,53,0.8)]" />
+            </div>
+
+            <h3 className="text-2xl font-extrabold text-lime-400 tracking-wide drop-shadow-[0_0_15px_rgba(163,230,53,0.5)] mb-2">
+              Analyzing Website
+            </h3>
+            <p className="text-white/80 font-medium text-sm mb-8 animate-pulse tracking-wide">
+              {analysisSteps[currentStep]}
+            </p>
+
+            <div className="w-full space-y-3">
+              {analysisSteps.map((step, idx) => {
+                const isDone = idx < currentStep;
+                const isCurrent = idx === currentStep;
+
+                return (
+                  <div
+                    key={idx}
+                    className={`flex items-center gap-3 px-4 py-3 rounded-2xl border text-xs font-bold transition-all duration-300 ${
+                      isDone
+                        ? "bg-lime-500/10 border-lime-500/50 text-lime-400 shadow-[0_0_15px_rgba(163,230,53,0.15)]"
+                        : isCurrent
+                        ? "bg-lime-400 text-black border-lime-400 shadow-[0_0_25px_rgba(163,230,53,0.6)] animate-pulse"
+                        : "bg-white/5 border-white/10 text-white/30"
+                    }`}
+                  >
+                    <span
+                      className={`w-2.5 h-2.5 rounded-full shrink-0 ${
+                        isDone
+                          ? "bg-lime-400 shadow-[0_0_8px_rgba(163,230,53,1)]"
+                          : isCurrent
+                          ? "bg-black"
+                          : "bg-white/20"
+                      }`}
+                    />
+                    <span className="truncate">{step}</span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Hero Section */}
       <div className="flex flex-col items-center w-full max-w-4xl mt-0 lg:mt-15">
         <div className="mt-12 sm:mt-16 lg:mt-20 flex gap-2 border border-lime-500/30 bg-lime-500/10 px-3 py-1.5 items-center rounded-full shadow-[0_0_15px_rgba(163,230,53,0.15)] transform-gpu will-change-transform">
@@ -126,24 +250,28 @@ const Page = () => {
           Paste any website URL below to get instant AI-driven insights on SEO,
           performance, and accessibility.
         </p>
-        <p className="text-white/40 text-sm sm:text-base text-center mt-1 select-none">
-          Stop guessing—optimize your site in one click.
-        </p>
 
-        {/* Input box */}
+        {/* Input Form Box */}
         <div className="mt-8 w-full max-w-2xl px-2">
-          <div className="relative flex flex-col sm:flex-row items-center gap-2 p-1.5 rounded-2xl sm:rounded-full bg-[#0a0f1d]/80 border border-lime-500/30 shadow-[0_0_25px_rgba(163,230,53,0.15)] focus-within:border-lime-400 focus-within:shadow-[0_0_35px_rgba(163,230,53,0.3)] transition-all duration-300 transform-gpu will-change-transform">
+          <form
+            onSubmit={handleAnalyze}
+            className="relative flex flex-col sm:flex-row items-center gap-2 p-1.5 rounded-2xl sm:rounded-full bg-[#0a0f1d]/80 border border-lime-500/30 shadow-[0_0_25px_rgba(163,230,53,0.15)] focus-within:border-lime-400 focus-within:shadow-[0_0_35px_rgba(163,230,53,0.3)] transition-all duration-300 transform-gpu will-change-transform"
+          >
             <input
               type="url"
+              required
+              value={urlInput}
+              onChange={(e) => setUrlInput(e.target.value)}
               placeholder="Paste website URL (e.g. https://example.com)"
               className="w-full bg-transparent px-5 py-3 sm:py-2 text-sm sm:text-base text-zinc-100 placeholder:text-zinc-500 focus:outline-none"
             />
 
             <button
-              type="button"
-              className="w-full sm:w-auto shrink-0 flex items-center justify-center gap-2 px-6 py-3 rounded-xl sm:rounded-full bg-lime-500 hover:bg-lime-400 text-black font-bold text-sm tracking-wide shadow-[0_0_20px_rgba(163,230,53,0.4)] hover:shadow-[0_0_30px_rgba(163,230,53,0.7)] active:scale-95 transition-all duration-200 cursor-pointer transform-gpu will-change-transform"
+              type="submit"
+              disabled={isAnalyzing}
+              className="w-full sm:w-auto shrink-0 flex items-center justify-center gap-2 px-6 py-3 rounded-xl sm:rounded-full bg-lime-500 hover:bg-lime-400 text-black font-bold text-sm tracking-wide shadow-[0_0_20px_rgba(163,230,53,0.4)] hover:shadow-[0_0_30px_rgba(163,230,53,0.7)] active:scale-95 transition-all duration-200 cursor-pointer disabled:opacity-50"
             >
-              <span>Analyze Site</span>
+              <span>{isAnalyzing ? "Analyzing..." : "Analyze Site"}</span>
               <svg
                 className="w-4 h-4 text-black"
                 fill="none"
@@ -158,15 +286,14 @@ const Page = () => {
                 />
               </svg>
             </button>
-          </div>
+          </form>
+          {error && <p className="text-red-400 text-sm mt-3 text-center">{error}</p>}
         </div>
 
-        {/* Free text */}
         <span className="text-white/40 mt-3 text-sm sm:text-base text-center max-w-xl lg:max-w-2xl leading-relaxed select-none">
           Free — No credit card required • 5 analyses per day
         </span>
 
-        {/* Wave Animation */}
         <div className="absolute bottom-0 left-0 w-full overflow-hidden pointer-events-none z-0">
           <HomeWave />
         </div>
@@ -218,7 +345,6 @@ const Page = () => {
           projects, or full-scale analysis for teams shipping at volume.
         </p>
 
-        {/*Pricing */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full items-stretch select-none">
           {plans.map((plan) => (
             <div
@@ -276,7 +402,6 @@ const Page = () => {
         </div>
       </div>
 
-      {/* Footer */}
       <div className="bottom-0 w-full mt-30">
         <Footer />
       </div>
