@@ -22,29 +22,32 @@ const navLinks = [
 
 interface NavbarProps {
   userTier?: string;
+  initialIsAuthenticated?: boolean;
 }
 
-const Navbar = ({ userTier = "FREE" }: NavbarProps) => {
+const Navbar = ({ userTier = "FREE", initialIsAuthenticated = false }: NavbarProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navRef = useRef<HTMLElement>(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(initialIsAuthenticated);
   const pathname = usePathname();
-
   useEffect(() => {
+    let cancelled = false;
+
     const checkAuth = async () => {
       try {
         const res = await fetch("/api/auth/me", { credentials: "include" });
         const data = await res.json();
-        setIsAuthenticated(Boolean(data.authenticated));
+        if (!cancelled) {
+          setIsAuthenticated(Boolean(data.authenticated));
+        }
       } catch {
-        setIsAuthenticated(false);
-      } finally {
-        setIsLoading(false);
       }
     };
 
     checkAuth();
+    return () => {
+      cancelled = true;
+    };
   }, [pathname]);
 
   useEffect(() => {
@@ -112,10 +115,6 @@ const Navbar = ({ userTier = "FREE" }: NavbarProps) => {
       </div>
     );
   };
-
-  if (isLoading) {
-    return null;
-  }
 
   return (
     <nav

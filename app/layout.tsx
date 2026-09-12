@@ -4,7 +4,7 @@ import "./globals.css";
 import prisma from "@/lib/prisma";
 import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
-import Navbar from "@/components/Navbar"; 
+import Navbar from "@/components/Navbar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,10 +29,11 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   let userTier = "FREE";
+  let isAuthenticated = false;
 
   try {
     const cookieStore = await cookies();
-    const token = cookieStore.get("token")?.value; 
+    const token = cookieStore.get("token")?.value;
 
     if (token) {
       const decoded = jwt.verify(
@@ -46,6 +47,8 @@ export default async function RootLayout({
           select: { subscriptionTier: true },
         });
 
+        isAuthenticated = true;
+
         if (user?.subscriptionTier) {
           userTier = user.subscriptionTier;
         }
@@ -53,6 +56,7 @@ export default async function RootLayout({
     }
   } catch (error) {
     console.error("Auth layout error:", error);
+    isAuthenticated = false;
   }
 
   return (
@@ -62,7 +66,7 @@ export default async function RootLayout({
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col" suppressHydrationWarning>
-        <Navbar userTier={userTier} />
+        <Navbar userTier={userTier} initialIsAuthenticated={isAuthenticated} />
         {children}
       </body>
     </html>
