@@ -30,7 +30,6 @@ const Page = () => {
     "Generating Final Report...",
   ];
 
-  // Steps Interval Effect
   useEffect(() => {
     let interval: NodeJS.Timeout;
     if (isAnalyzing) {
