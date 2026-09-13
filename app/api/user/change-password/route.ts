@@ -5,7 +5,7 @@ import bcrypt from "bcryptjs";
 import { cookies } from "next/headers";
 
 interface JwtPayload {
-  userId: string;
+  id: string;
 }
 
 interface ChangePasswordBody {
@@ -51,7 +51,7 @@ export async function PATCH(req: Request) {
     }
 
     const user = await prisma.user.findUnique({
-      where: { id: decoded.userId },
+      where: { id: decoded.id },
     });
 
     if (!user) {

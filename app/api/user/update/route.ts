@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
 
 interface JwtPayload {
-  userId: string;
+  id: string;
 }
 
 interface UpdateProfileBody {
@@ -40,7 +40,7 @@ export async function PATCH(req: Request) {
     }
 
     const updatedUser = await prisma.user.update({
-      where: { id: decoded.userId },
+      where: { id: decoded.id },
       data: {
         name: name.trim(),
         image: image || null,
