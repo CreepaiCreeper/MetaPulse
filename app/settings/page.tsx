@@ -238,7 +238,6 @@ const SettingsPage = () => {
       </header>
 
       <main className="max-w-3xl mx-auto px-4 py-8 space-y-8">
-        {/* SECTION A: PROFILE */}
         <section className="bg-[#0a0f1d]/90 border border-lime-500/20 rounded-3xl p-6 sm:p-8 shadow-[0_0_30px_rgba(163,230,53,0.05)] relative overflow-hidden">
           <div className="flex items-center gap-3 mb-6 border-b border-lime-500/20 pb-4">
             <div className="p-2 rounded-xl bg-lime-500/10 border border-lime-500/20">
@@ -354,7 +353,6 @@ const SettingsPage = () => {
           </form>
         </section>
 
-        {/* SECTION B: PASSWORD */}
         <section className="bg-[#0a0f1d]/90 border border-lime-500/20 rounded-3xl p-6 sm:p-8 shadow-[0_0_30px_rgba(163,230,53,0.05)]">
           <div className="flex items-center gap-3 mb-6 border-b border-lime-500/20 pb-4">
             <div className="p-2 rounded-xl bg-lime-500/10 border border-lime-500/20">
@@ -451,7 +449,6 @@ const SettingsPage = () => {
           </form>
         </section>
 
-        {/* SECTION C: DANGER ZONE */}
         <section className="bg-[#0a0f1d]/90 border border-red-500/30 rounded-3xl p-6 sm:p-8 shadow-[0_0_30px_rgba(239,68,68,0.05)]">
           <div className="flex items-center gap-3 mb-4 border-b border-red-500/20 pb-3">
             <span className="text-red-400 font-extrabold text-xs uppercase tracking-widest">

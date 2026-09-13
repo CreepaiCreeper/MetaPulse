@@ -145,7 +145,7 @@ const Navbar = ({
     );
   };
 
-  const userName = userData?.name || "Takashi";
+  const userName = userData?.name || "User";
   const userAvatarSrc = userData?.profilePic || userData?.image;
   const firstLetter = userName.charAt(0).toUpperCase();
 
@@ -196,7 +196,6 @@ const Navbar = ({
           </Link>
         </div>
 
-        {/* Middle Links */}
         {isAuthenticated && (
           <div className="hidden lg:flex items-center gap-2 flex-1 justify-center min-w-0">
             {navLinks.map(({ href, label, icon: Icon }) => (
@@ -216,7 +215,6 @@ const Navbar = ({
         <div className="flex items-center gap-2 sm:gap-3 shrink-0">
           {isAuthenticated ? (
             <>
-              {/* Desktop Profile Menu */}
               <div className="relative hidden lg:block" ref={profileMenuRef}>
                 <button
                   onClick={() => setIsProfileMenuOpen((prev) => !prev)}
@@ -259,10 +257,8 @@ const Navbar = ({
                 )}
               </div>
 
-              {/* Tier Badge */}
               <div className="hidden lg:block">{renderBadge()}</div>
 
-              {/* Mobile Profile Trigger Button */}
               <button
                 onClick={() => setIsMenuOpen((prev) => !prev)}
                 className="lg:hidden flex items-center justify-center p-0.5 rounded-full border border-[#262626] shrink-0"
@@ -270,7 +266,6 @@ const Navbar = ({
                 {renderAvatar("h-8 w-8 text-sm")}
               </button>
 
-              {/* Mobile Toggle Button */}
               <button
                 onClick={() => setIsMenuOpen((prev) => !prev)}
                 aria-label="Toggle navigation menu"
@@ -303,7 +298,6 @@ const Navbar = ({
         </div>
       </div>
 
-      {/* Mobile Drawer Menu */}
       {isAuthenticated && isMenuOpen && (
         <div className="lg:hidden absolute top-16 left-0 w-full bg-[#0a0a0a] border-b border-[#262626] shadow-xl shadow-black/40 flex flex-col p-3 gap-1 z-50">
           <div className="flex items-center justify-between px-4 py-3 bg-[#171717] rounded-lg mb-1">
