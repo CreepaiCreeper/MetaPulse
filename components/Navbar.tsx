@@ -55,9 +55,11 @@ const Navbar = ({
         const res = await fetch("/api/auth/me", { credentials: "include" });
         const data = await res.json();
         if (!cancelled) {
-          setIsAuthenticated(Boolean(data.authenticated));
+          setIsAuthenticated(Boolean(data.success));
           if (data.user) {
             setUserData(data.user);
+          } else {
+            setUserData(null);
           }
         }
       } catch (err) {
