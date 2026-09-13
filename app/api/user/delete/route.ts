@@ -7,14 +7,14 @@ interface JwtPayload {
   userId: string;
 }
 
-export async function GET() {
+export async function DELETE() {
   try {
     const cookieStore = await cookies();
     const token = cookieStore.get("token")?.value;
 
     if (!token) {
       return NextResponse.json(
-        { success: false, message: "Not authenticated" },
+        { success: false, message: "Unauthorized access" },
         { status: 401 }
       );
     }
@@ -24,36 +24,24 @@ export async function GET() {
       process.env.JWT_SECRET || "fallback_secret"
     ) as JwtPayload;
 
-    const user = await prisma.user.findUnique({
+    await prisma.user.delete({
       where: { id: decoded.userId },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        image: true,
-        subscriptionTier: true,
-      },
     });
 
-    if (!user) {
-      return NextResponse.json(
-        { success: false, message: "User not found" },
-        { status: 404 }
-      );
-    }
+    cookieStore.delete("token");
 
     return NextResponse.json({
       success: true,
-      user,
+      message: "Account deleted permanently",
     });
   } catch (error: unknown) {
     const errorMessage =
-      error instanceof Error ? error.message : "Invalid session token";
-    console.error("Error fetching me:", errorMessage);
+      error instanceof Error ? error.message : "Failed to delete account";
+    console.error("Error deleting account:", errorMessage);
 
     return NextResponse.json(
-      { success: false, message: "Invalid session token" },
-      { status: 401 }
+      { success: false, message: "Failed to delete account" },
+      { status: 500 }
     );
   }
 }

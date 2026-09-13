@@ -11,6 +11,8 @@ import {
   LogOut,
   Menu,
   X,
+  Settings,
+  ChevronDown,
 } from "lucide-react";
 
 const navLinks = [
@@ -20,16 +22,31 @@ const navLinks = [
   { href: "/pricing", label: "Pricing", icon: CreditCard },
 ];
 
+interface UserData {
+  name?: string;
+  image?: string;
+  profilePic?: string;
+}
+
 interface NavbarProps {
   userTier?: string;
   initialIsAuthenticated?: boolean;
 }
 
-const Navbar = ({ userTier = "FREE", initialIsAuthenticated = false }: NavbarProps) => {
+const Navbar = ({
+  userTier = "FREE",
+  initialIsAuthenticated = false,
+}: NavbarProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+  const [userData, setUserData] = useState<UserData | null>(null);
+
   const navRef = useRef<HTMLElement>(null);
+  const profileMenuRef = useRef<HTMLDivElement>(null);
+
   const [isAuthenticated, setIsAuthenticated] = useState(initialIsAuthenticated);
   const pathname = usePathname();
+
   useEffect(() => {
     let cancelled = false;
 
@@ -39,8 +56,12 @@ const Navbar = ({ userTier = "FREE", initialIsAuthenticated = false }: NavbarPro
         const data = await res.json();
         if (!cancelled) {
           setIsAuthenticated(Boolean(data.authenticated));
+          if (data.user) {
+            setUserData(data.user);
+          }
         }
-      } catch {
+      } catch (err) {
+        console.error("Auth check failed:", err);
       }
     };
 
@@ -54,6 +75,12 @@ const Navbar = ({ userTier = "FREE", initialIsAuthenticated = false }: NavbarPro
     const handleClickOutside = (event: MouseEvent) => {
       if (navRef.current && !navRef.current.contains(event.target as Node)) {
         setIsMenuOpen(false);
+      }
+      if (
+        profileMenuRef.current &&
+        !profileMenuRef.current.contains(event.target as Node)
+      ) {
+        setIsProfileMenuOpen(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
@@ -116,6 +143,29 @@ const Navbar = ({ userTier = "FREE", initialIsAuthenticated = false }: NavbarPro
     );
   };
 
+  const userName = userData?.name || "Takashi";
+  const userAvatarSrc = userData?.profilePic || userData?.image;
+  const firstLetter = userName.charAt(0).toUpperCase();
+
+  const renderAvatar = (sizeClass = "h-7 w-7 text-xs") => {
+    if (userAvatarSrc) {
+      return (
+        <img
+          src={userAvatarSrc}
+          alt={userName}
+          className={`${sizeClass} rounded-full object-cover shrink-0`}
+        />
+      );
+    }
+    return (
+      <div
+        className={`${sizeClass} rounded-full bg-lime-500 text-black font-bold flex items-center justify-center shrink-0 uppercase select-none`}
+      >
+        {firstLetter}
+      </div>
+    );
+  };
+
   return (
     <nav
       ref={navRef}
@@ -144,6 +194,7 @@ const Navbar = ({ userTier = "FREE", initialIsAuthenticated = false }: NavbarPro
           </Link>
         </div>
 
+        {/* Middle Links */}
         {isAuthenticated && (
           <div className="hidden lg:flex items-center gap-2 flex-1 justify-center min-w-0">
             {navLinks.map(({ href, label, icon: Icon }) => (
@@ -163,33 +214,61 @@ const Navbar = ({ userTier = "FREE", initialIsAuthenticated = false }: NavbarPro
         <div className="flex items-center gap-2 sm:gap-3 shrink-0">
           {isAuthenticated ? (
             <>
-              <div className="hidden lg:flex items-center gap-2 bg-[#171717] px-3 py-1.5 rounded-full border border-[#262626] shadow-[0_0_20px_rgba(163,230,53,0.4)] hover:shadow-[0_0_30px_rgba(163,230,53,0.7)] transition-all duration-200 cursor-pointer transform-gpu will-change-transform">
-                <img
-                  src="reyna.jpeg"
-                  alt="Profile"
-                  className="h-7 w-7 rounded-full object-cover cursor-pointer shrink-0"
-                />
-                <span className="text-white/80 text-sm font-medium select-none whitespace-nowrap">
-                  Takashi
-                </span>
+              {/* Desktop Profile Menu */}
+              <div className="relative hidden lg:block" ref={profileMenuRef}>
+                <button
+                  onClick={() => setIsProfileMenuOpen((prev) => !prev)}
+                  className="flex items-center gap-2 bg-[#171717] px-3 py-1.5 rounded-full border border-[#262626] hover:border-lime-500/50 shadow-[0_0_20px_rgba(163,230,53,0.4)] hover:shadow-[0_0_30px_rgba(163,230,53,0.7)] transition-all duration-200 cursor-pointer transform-gpu will-change-transform"
+                >
+                  {renderAvatar("h-7 w-7 text-xs")}
+                  <span className="text-white/80 text-sm font-medium select-none whitespace-nowrap">
+                    {userName}
+                  </span>
+                  <ChevronDown
+                    className={`w-3.5 h-3.5 text-white/50 transition-transform duration-200 ${
+                      isProfileMenuOpen ? "rotate-180" : ""
+                    }`}
+                  />
+                </button>
+
+                {/* Dropdown Menu */}
+                {isProfileMenuOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-[#0a0a0a] border border-[#262626] rounded-xl shadow-2xl py-1 z-50 overflow-hidden">
+                    <Link
+                      href="/settings"
+                      onClick={() => setIsProfileMenuOpen(false)}
+                      className="flex items-center gap-2.5 px-4 py-2.5 text-xs font-semibold text-[#a3a3a3] hover:text-lime-400 hover:bg-[#171717] transition-colors"
+                    >
+                      <Settings className="w-4 h-4 shrink-0" />
+                      <span>Settings</span>
+                    </Link>
+                    <div className="h-px bg-[#262626] my-1" />
+                    <button
+                      onClick={() => {
+                        setIsProfileMenuOpen(false);
+                        handleLogout();
+                      }}
+                      className="flex items-center gap-2.5 px-4 py-2.5 text-xs font-semibold text-red-400/80 hover:text-red-400 hover:bg-[#171717] transition-colors w-full text-left cursor-pointer"
+                    >
+                      <LogOut className="w-4 h-4 shrink-0" />
+                      <span>Logout</span>
+                    </button>
+                  </div>
+                )}
               </div>
 
+              {/* Tier Badge */}
               <div className="hidden lg:block">{renderBadge()}</div>
 
+              {/* Mobile Profile Trigger Button */}
               <button
-                onClick={handleLogout}
-                className="hidden lg:flex items-center gap-2 text-xs font-semibold text-white/50 cursor-pointer hover:text-lime-400 hover:bg-[#171717] transition-colors px-3 py-2 rounded-full transform-gpu will-change-transform whitespace-nowrap"
+                onClick={() => setIsMenuOpen((prev) => !prev)}
+                className="lg:hidden flex items-center justify-center p-0.5 rounded-full border border-[#262626] shrink-0"
               >
-                <LogOut className="w-4 h-4 shrink-0" />
-                <span>Logout</span>
+                {renderAvatar("h-8 w-8 text-sm")}
               </button>
 
-              <img
-                src="reyna.jpeg"
-                alt="Profile"
-                className="lg:hidden h-8 w-8 rounded-full object-cover cursor-pointer border border-[#262626] shrink-0"
-              />
-
+              {/* Mobile Toggle Button */}
               <button
                 onClick={() => setIsMenuOpen((prev) => !prev)}
                 aria-label="Toggle navigation menu"
@@ -222,8 +301,19 @@ const Navbar = ({ userTier = "FREE", initialIsAuthenticated = false }: NavbarPro
         </div>
       </div>
 
+      {/* Mobile Drawer Menu */}
       {isAuthenticated && isMenuOpen && (
         <div className="lg:hidden absolute top-16 left-0 w-full bg-[#0a0a0a] border-b border-[#262626] shadow-xl shadow-black/40 flex flex-col p-3 gap-1 z-50">
+          <div className="flex items-center justify-between px-4 py-3 bg-[#171717] rounded-lg mb-1">
+            <div className="flex items-center gap-3">
+              {renderAvatar("h-8 w-8 text-xs")}
+              <span className="text-white/90 text-sm font-semibold select-none">
+                {userName}
+              </span>
+            </div>
+            {renderBadge()}
+          </div>
+
           {navLinks.map(({ href, label, icon: Icon }) => (
             <Link
               key={href}
@@ -236,18 +326,20 @@ const Navbar = ({ userTier = "FREE", initialIsAuthenticated = false }: NavbarPro
             </Link>
           ))}
 
-          <div className="h-px bg-[#262626] my-1" />
+          <Link
+            href="/settings"
+            onClick={() => setIsMenuOpen(false)}
+            className="flex items-center gap-3 text-sm font-semibold text-[#a3a3a3] hover:text-lime-400 hover:bg-[#171717] transition-colors px-4 py-3 rounded-lg"
+          >
+            <Settings className="w-4 h-4 shrink-0" />
+            <span>Settings</span>
+          </Link>
 
-          <div className="flex items-center justify-between px-4 py-2 flex-wrap gap-2">
-            <span className="text-white/60 text-sm font-medium select-none">
-              Takashi
-            </span>
-            {renderBadge()}
-          </div>
+          <div className="h-px bg-[#262626] my-1" />
 
           <button
             onClick={handleLogout}
-            className="flex items-center gap-3 text-sm font-semibold text-white/50 hover:text-lime-400 hover:bg-[#171717] transition-colors px-4 py-3 rounded-lg w-full text-left"
+            className="flex items-center gap-3 text-sm font-semibold text-red-400/80 hover:text-red-400 hover:bg-[#171717] transition-colors px-4 py-3 rounded-lg w-full text-left"
           >
             <LogOut className="w-4 h-4 shrink-0" />
             <span>Logout</span>
