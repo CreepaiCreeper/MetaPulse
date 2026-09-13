@@ -180,7 +180,7 @@ const Page = () => {
   ];
 
   return (
-    <div className="bg-[#030712] min-h-screen w-full flex flex-col items-center px-4 pb-24 relative">
+    <div className="bg-[#030712] min-h-screen w-full flex flex-col items-center px-4 pb-24">
       {isAnalyzing && (
         <div className="fixed inset-0 z-50 bg-[#030712]/90 backdrop-blur-md flex flex-col items-center justify-center p-4">
           <div className="p-8 sm:p-10 rounded-3xl bg-[#0a0f1d] border-2 border-lime-400/80 shadow-[0_0_60px_rgba(163,230,53,0.35)] max-w-md w-full flex flex-col items-center text-center relative overflow-hidden transition-all">
@@ -233,7 +233,7 @@ const Page = () => {
       )}
 
       {/* Hero Section */}
-      <div className="flex flex-col items-center w-full max-w-4xl mt-0 lg:mt-15">
+      <div className="relative flex flex-col items-center w-full max-w-4xl mt-0 lg:mt-15">
         <div className="mt-12 sm:mt-16 lg:mt-20 flex gap-2 border border-lime-500/30 bg-lime-500/10 px-3 py-1.5 items-center rounded-full shadow-[0_0_15px_rgba(163,230,53,0.15)] transform-gpu will-change-transform">
           <span className="w-2 h-2 rounded-full bg-lime-400 animate-pulse" />
           <span className="text-[11px] sm:text-xs font-semibold text-lime-400 tracking-wider select-none">
@@ -303,13 +303,13 @@ const Page = () => {
         </span>
 
         {/* Wave Animation */}
-        <div className="absolute bottom-0 left-0 w-full overflow-hidden pointer-events-none z-0">
+        <div className="bottom-0 mt-10 lg:mt-48 left-0 w-screen lg:w-[205vh] overflow-hidden pointer-events-none z-0">
           <HomeWave />
         </div>
       </div>
 
       {/* Features Section */}
-      <div className="w-full max-w-6xl mt-50 lg:mt-105 flex flex-col items-center">
+      <div className="w-full max-w-6xl mt-20 lg:mt-50 flex flex-col items-center">
         <h2 className="text-2xl sm:text-4xl lg:text-5xl text-lime-400 font-bold text-center drop-shadow-[0_0_35px_rgba(163,230,53,0.35)] select-none">
           Everything Included for
         </h2>
