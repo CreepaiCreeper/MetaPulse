@@ -345,7 +345,7 @@ const Page = () => {
       </div>
 
       {/* Pricing Section */}
-      <div className="w-full max-w-6xl mt-32 flex flex-col items-center">
+      <div className="w-full max-w-6xl mt-20 lg:mt-32 flex flex-col items-center">
         <h2 className="text-2xl sm:text-4xl lg:text-5xl text-lime-400 font-bold text-center drop-shadow-[0_0_35px_rgba(163,230,53,0.35)] select-none">
           Simple Pricing
         </h2>
