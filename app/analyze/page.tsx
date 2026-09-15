@@ -1,10 +1,138 @@
-import React from "react";
-import { Zap, ShieldCheck, Gauge } from "lucide-react";
+"use client";
+
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { Zap, ShieldCheck, Gauge, Loader2 } from "lucide-react";
 import Footer from "@/components/Footer";
 
 const Analyze = () => {
+  const router = useRouter();
+  const [urlInput, setUrlInput] = useState("");
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [currentStep, setCurrentStep] = useState(0);
+  const [error, setError] = useState("");
+
+  const analysisSteps = [
+    "Connecting to site...",
+    "Extracting HTML & Meta Tags...",
+    "Running AI SEO Analysis...",
+    "Generating Final Report...",
+  ];
+
+  // Step Animation Interval
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (isAnalyzing) {
+      setCurrentStep(0);
+      interval = setInterval(() => {
+        setCurrentStep((prev) => {
+          if (prev < analysisSteps.length - 1) return prev + 1;
+          return prev;
+        });
+      }, 2500);
+    }
+    return () => clearInterval(interval);
+  }, [isAnalyzing, analysisSteps.length]);
+
+  // Lock background scroll during analysis overlay
+  useEffect(() => {
+    if (isAnalyzing) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [isAnalyzing]);
+
+  const handleAnalyze = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    if (!urlInput.trim() || isAnalyzing) return;
+
+    setIsAnalyzing(true);
+    setError("");
+
+    try {
+      const res = await fetch("/api/scan", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url: urlInput }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        throw new Error(data.message || "Failed to analyze website");
+      }
+
+      if (data.scan && data.scan.id) {
+        router.push(`/report/${data.scan.id}`);
+      }
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Something went wrong");
+      }
+      setIsAnalyzing(false);
+    }
+  };
+
   return (
-    <div className="bg-[#030712] min-h-[calc(100vh-4rem)] w-full flex flex-col justify-between lg:mt-20">
+    <div className="bg-[#030712] min-h-[calc(100vh-4rem)] w-full flex flex-col justify-between lg:mt-20 relative">
+      {/* Overlay Modal for Analyzing State */}
+      {isAnalyzing && (
+        <div className="fixed inset-0 z-50 bg-[#030712]/90 backdrop-blur-md flex flex-col items-center justify-center p-4">
+          <div className="p-8 sm:p-10 rounded-3xl bg-[#0a0f1d] border-2 border-lime-400/80 shadow-[0_0_60px_rgba(163,230,53,0.35)] max-w-md w-full flex flex-col items-center text-center relative overflow-hidden transition-all">
+            <div className="absolute -top-10 -left-10 w-32 h-32 bg-lime-500/20 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-lime-500/20 rounded-full blur-3xl pointer-events-none" />
+
+            <div className="relative flex items-center justify-center mb-6">
+              <Loader2 className="w-14 h-14 text-lime-400 animate-spin drop-shadow-[0_0_20px_rgba(163,230,53,0.8)]" />
+            </div>
+
+            <h3 className="text-2xl font-extrabold text-lime-400 tracking-wide drop-shadow-[0_0_15px_rgba(163,230,53,0.5)] mb-2">
+              Analyzing Website
+            </h3>
+            <p className="text-white/80 font-medium text-sm mb-8 animate-pulse tracking-wide">
+              {analysisSteps[currentStep]}
+            </p>
+
+            <div className="w-full space-y-3">
+              {analysisSteps.map((step, idx) => {
+                const isDone = idx < currentStep;
+                const isCurrent = idx === currentStep;
+
+                return (
+                  <div
+                    key={idx}
+                    className={`flex items-center gap-3 px-4 py-3 rounded-2xl border text-xs font-bold transition-all duration-300 ${
+                      isDone
+                        ? "bg-lime-500/10 border-lime-500/50 text-lime-400 shadow-[0_0_15px_rgba(163,230,53,0.15)]"
+                        : isCurrent
+                        ? "bg-lime-400 text-black border-lime-400 shadow-[0_0_25px_rgba(163,230,53,0.6)] animate-pulse"
+                        : "bg-white/5 border-white/10 text-white/30"
+                    }`}
+                  >
+                    <span
+                      className={`w-2.5 h-2.5 rounded-full shrink-0 ${
+                        isDone
+                          ? "bg-lime-400 shadow-[0_0_8px_rgba(163,230,53,1)]"
+                          : isCurrent
+                          ? "bg-black"
+                          : "bg-white/20"
+                      }`}
+                    />
+                    <span className="truncate">{step}</span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
+
       <main className="flex-1 flex flex-col items-center justify-center px-4 py-16">
         <div className="flex flex-col items-center w-full max-w-4xl text-center">
           {/* Credits Badge */}
@@ -30,17 +158,24 @@ const Analyze = () => {
 
           {/* Input Box Section */}
           <div className="mt-8 w-full max-w-xl px-2">
-            <div className="relative flex flex-col sm:flex-row items-center gap-2 p-1.5 rounded-2xl sm:rounded-full bg-[#0a0f1d]/80 border border-lime-500/30 shadow-[0_0_25px_rgba(163,230,53,0.15)] focus-within:border-lime-400 focus-within:shadow-[0_0_35px_rgba(163,230,53,0.3)] transition-all duration-300 transform-gpu will-change-transform">
+            <form
+              onSubmit={handleAnalyze}
+              className="relative flex flex-col sm:flex-row items-center gap-2 p-1.5 rounded-2xl sm:rounded-full bg-[#0a0f1d]/80 border border-lime-500/30 shadow-[0_0_25px_rgba(163,230,53,0.15)] focus-within:border-lime-400 focus-within:shadow-[0_0_35px_rgba(163,230,53,0.3)] transition-all duration-300 transform-gpu will-change-transform"
+            >
               <input
                 type="url"
+                required
+                value={urlInput}
+                onChange={(e) => setUrlInput(e.target.value)}
                 placeholder="Paste website URL (e.g. https://example.com)"
                 className="w-full bg-transparent px-5 py-2.5 sm:py-2 text-xs sm:text-sm text-zinc-100 placeholder:text-zinc-500 focus:outline-none"
               />
               <button
-                type="button"
-                className="w-full sm:w-auto shrink-0 flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl sm:rounded-full bg-lime-500 hover:bg-lime-400 text-black font-bold text-xs sm:text-sm tracking-wide shadow-[0_0_20px_rgba(163,230,53,0.4)] hover:shadow-[0_0_30px_rgba(163,230,53,0.7)] active:scale-95 transition-all duration-200 cursor-pointer transform-gpu will-change-transform"
+                type="submit"
+                disabled={isAnalyzing}
+                className="w-full sm:w-auto shrink-0 flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl sm:rounded-full bg-lime-500 hover:bg-lime-400 text-black font-bold text-xs sm:text-sm tracking-wide shadow-[0_0_20px_rgba(163,230,53,0.4)] hover:shadow-[0_0_30px_rgba(163,230,53,0.7)] active:scale-95 transition-all duration-200 cursor-pointer transform-gpu will-change-transform disabled:opacity-50"
               >
-                <span>Analyze Site</span>
+                <span>{isAnalyzing ? "Analyzing..." : "Analyze Site"}</span>
                 <svg
                   className="w-4 h-4 text-black"
                   fill="none"
@@ -55,7 +190,10 @@ const Analyze = () => {
                   />
                 </svg>
               </button>
-            </div>
+            </form>
+            {error && (
+              <p className="text-red-400 text-xs sm:text-sm mt-2">{error}</p>
+            )}
           </div>
 
           {/* Feature Badges */}
@@ -83,9 +221,8 @@ const Analyze = () => {
       </main>
 
       {/* Footer */}
-      <div className=" lg:mt-77">
-
-      <Footer/>
+      <div className="lg:mt-77">
+        <Footer />
       </div>
     </div>
   );
