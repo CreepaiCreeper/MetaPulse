@@ -5,10 +5,15 @@
 **Instant AI-powered SEO, performance, and accessibility audits.**
 
 [![Next.js 15](https://img.shields.io/badge/Next.js_15-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)](https://nextjs.org/)
+[![React](https://img.shields.io/badge/React_19-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+[![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)](https://nodejs.org/)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
 [![Prisma](https://img.shields.io/badge/Prisma-2D3748?style=for-the-badge&logo=prisma&logoColor=white)](https://www.prisma.io/)
+[![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://meta-pulse-woad.vercel.app/)
+
+### 🌐 [Live Demo](https://meta-pulse-woad.vercel.app/)
 
 </div>
 
@@ -33,8 +38,9 @@
 ## 🛠️ Tech Stack
 
 - **Frontend:** Next.js 15 (App Router), React, TypeScript, Tailwind CSS
-- **Backend:** Next.js API Routes, JWT Authentication
+- **Backend:** Node.js, Next.js API Routes, JWT Authentication
 - **Database & ORM:** PostgreSQL, Prisma ORM
+- **Deployment:** Vercel
 
 ---
 
