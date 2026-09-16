@@ -21,9 +21,9 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    const decoded = jwt.verify(token, JWT_SECRET) as { userId: string };
+    const decoded = jwt.verify(token, JWT_SECRET) as { id: string };
 
-    if (!decoded?.userId) {
+    if (!decoded?.id) {
       return NextResponse.json(
         { success: false, error: "Invalid token" },
         { status: 401 }
@@ -31,7 +31,7 @@ export async function GET(req: NextRequest) {
     }
 
     const user = await prisma.user.findUnique({
-      where: { id: decoded.userId },
+      where: { id: decoded.id },
       include: {
         scans: {
           orderBy: { id: "desc" },

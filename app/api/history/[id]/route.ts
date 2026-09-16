@@ -4,12 +4,14 @@ import jwt from "jsonwebtoken";
 
 const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret";
 
-export async function DELETE(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+type RouteParams = {
+  params: Promise<{ id: string }>;
+};
+
+export async function DELETE(req: NextRequest, { params }: RouteParams) {
   try {
-    const { id } = params;
+    const { id } = await params;
+
     const token = req.cookies.get("token")?.value;
 
     if (!token) {
@@ -19,9 +21,9 @@ export async function DELETE(
       );
     }
 
-    const decoded = jwt.verify(token, JWT_SECRET) as { userId: string };
+    const decoded = jwt.verify(token, JWT_SECRET) as { id: string };
 
-    if (!decoded?.userId) {
+    if (!decoded?.id) {
       return NextResponse.json(
         { success: false, error: "Invalid token" },
         { status: 401 }
@@ -31,7 +33,7 @@ export async function DELETE(
     const deletedScan = await prisma.scan.deleteMany({
       where: {
         id: id,
-        userId: decoded.userId,
+        userId: decoded.id,
       },
     });
 

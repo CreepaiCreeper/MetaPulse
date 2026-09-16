@@ -15,22 +15,21 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    const decoded = jwt.verify(token, JWT_SECRET) as { userId: string };
+    const decoded = jwt.verify(token, JWT_SECRET) as { id: string };
 
-    if (!decoded?.userId) {
+    if (!decoded?.id) {
       return NextResponse.json(
         { success: false, error: "Invalid token payload" },
         { status: 401 }
       );
     }
 
-    // Exact `Scan` model access
     const scans = await prisma.scan.findMany({
       where: {
-        userId: decoded.userId,
+        userId: decoded.id,
       },
       orderBy: {
-        id: "desc", 
+        id: "desc",
       },
       select: {
         id: true,
@@ -39,6 +38,8 @@ export async function GET(req: NextRequest) {
         score: true,
         metaTitle: true,
         wordCount: true,
+        h1Count: true,
+        missingAltCount: true,
         loadTimeMs: true,
         summary: true,
       },
