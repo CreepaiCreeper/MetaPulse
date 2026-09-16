@@ -62,7 +62,7 @@ const SettingsPage = () => {
     if (!file) return;
 
     if (file.size > 2 * 1024 * 1024) {
-      setProfileMessage("Image size 2MB se kam honi chahiye");
+      setProfileMessage("Max size 2MB");
       setProfileSuccess(false);
       return;
     }

@@ -13,11 +13,6 @@ const TIER_LIMITS: Record<string, number> = {
 function clamp(n: number, min = 0, max = 100) {
   return Math.max(min, Math.min(max, Math.round(n)));
 }
-
-// Performance score derived from actual load time — buckets roughly mirror
-// common Core Web Vitals thresholds. This used to just be a copy of the
-// AI's overall score, which is why every score on the report page looked
-// identical.
 function scorePerformance(loadTimeMs: number): number {
   if (loadTimeMs <= 800) return 100;
   if (loadTimeMs <= 1500) return 90;
@@ -89,10 +84,6 @@ export async function POST(request: NextRequest) {
       } catch {}
     }
 
-    // --- Daily quota enforcement ---
-    // The scan count / date on the user record was never being updated
-    // anywhere in this route, so "scans left today" on the dashboard never
-    // actually went down and the tier limit was never enforced.
     let userRecord: { subscriptionTier: string; dailyScansCount: number; lastScanDate: Date } | null = null;
     if (userId) {
       userRecord = await prisma.user.findUnique({
@@ -124,12 +115,6 @@ export async function POST(request: NextRequest) {
     const loadTimeMs = Date.now() - startTime;
 
     const isHttps = /^https:\/\//i.test(url);
-
-    // --- Independent sub-scores ---
-    // Previously performance and bestPractices were literally set to the
-    // same overall AI score, and SEO was that same score +/- a fixed
-    // offset — which is why every card on the report showed near-identical
-    // numbers no matter what site was scanned.
     const performanceScore = scorePerformance(loadTimeMs);
     const accessibilityScore = scoreAccessibility(scrapedData.totalImages, scrapedData.missingAltCount);
     const bestPracticesScore = scoreBestPractices(scrapedData, isHttps);
@@ -351,7 +336,6 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    // --- Update quota usage (only for signed-in users) ---
     if (userId && userRecord) {
       const today = new Date().toDateString();
       const lastScanDay = new Date(userRecord.lastScanDate).toDateString();

@@ -200,7 +200,6 @@ export default function ReportPage() {
   return (
     <div className="min-h-screen bg-[#030712] text-zinc-100 font-sans pb-20 selection:bg-lime-500/30">
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 lg:pt-24">
-        {/* Navigation & Actions */}
         <div className="flex items-center justify-between mb-4">
           <button
             onClick={() => router.back()}
@@ -326,7 +325,6 @@ export default function ReportPage() {
           </div>
         </div>
 
-        {/* Dynamic Navigation Tabs */}
         <div className="flex items-center gap-2 mb-6 border-b border-white/10 pb-3">
           {(["overview", "meta", "content", "issues"] as const).map((tab) => (
             <button
@@ -343,7 +341,6 @@ export default function ReportPage() {
           ))}
         </div>
 
-        {/* Overview Tab */}
         {activeTab === "overview" && (
           <>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

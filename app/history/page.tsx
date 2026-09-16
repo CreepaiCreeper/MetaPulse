@@ -22,11 +22,7 @@ const Page = () => {
   const [data, setData] = useState<ScanItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [deletingId, setDeletingId] = useState<string | null>(null);
-
-  // Custom confirm modal state — replaces the native window.confirm() that
-  // used to drop down from the top of the browser.
   const [confirmTarget, setConfirmTarget] = useState<ScanItem | null>(null);
-  // Small toast for delete failures — replaces window.alert().
   const [toast, setToast] = useState<string | null>(null);
 
   const fetchHistory = useCallback(async () => {
@@ -63,7 +59,6 @@ const Page = () => {
     return () => clearTimeout(t);
   }, [toast]);
 
-  // Lock background scroll + allow Esc to close while the modal is open
   useEffect(() => {
     if (!confirmTarget) return;
 
@@ -116,9 +111,6 @@ const Page = () => {
     return { text: "text-red-500", stroke: "#ef4444" };
   };
 
-  // --- Metric colors ---
-  // Each metric is now colored by what the number actually means, instead of
-  // every stat being the same flat zinc-200.
   const getWordCountColor = (count: number) => {
     if (count >= 300) return "text-[#10b981]";
     if (count >= 150) return "text-amber-400";
@@ -152,7 +144,6 @@ const Page = () => {
 
   return (
     <div className="bg-[#030712] min-h-screen w-full flex flex-col justify-between text-white">
-      {/* ---- Delete Confirmation Modal (centered, blurred backdrop) ---- */}
       {confirmTarget && (
         <div
           className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-in fade-in duration-200"
@@ -165,7 +156,6 @@ const Page = () => {
             onClick={(e) => e.stopPropagation()}
             className="relative w-full max-w-md p-6 sm:p-7 rounded-3xl bg-[#0a0f1d] border border-red-500/30 shadow-[0_0_60px_rgba(239,68,68,0.2)] overflow-hidden"
           >
-            {/* Ambient glow accents */}
             <div className="absolute -top-12 -left-12 w-32 h-32 bg-red-500/20 rounded-full blur-3xl pointer-events-none" />
             <div className="absolute -bottom-12 -right-12 w-32 h-32 bg-red-500/10 rounded-full blur-3xl pointer-events-none" />
 
@@ -228,7 +218,6 @@ const Page = () => {
         </div>
       )}
 
-      {/* ---- Error Toast (bottom center) ---- */}
       {toast && (
         <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[110] flex items-center gap-2.5 px-4 py-3 rounded-xl bg-[#0a0f1d] border border-red-500/30 shadow-[0_0_30px_rgba(239,68,68,0.2)]">
           <AlertTriangle className="w-4 h-4 text-red-400 shrink-0" />
@@ -311,7 +300,6 @@ const Page = () => {
                   className="flex flex-col md:flex-row items-start md:items-center justify-between p-4 sm:p-5 rounded-2xl bg-[#0a0f1d]/60 border border-white/5 hover:border-lime-500/20 transition-all duration-200 gap-4"
                 >
                   <div className="flex items-center gap-4">
-                    {/* Circle Score Gauge */}
                     <div className="relative w-14 h-14 shrink-0 flex items-center justify-center">
                       <svg className="w-full h-full transform -rotate-90">
                         <circle
@@ -370,7 +358,6 @@ const Page = () => {
                     </div>
                   </div>
 
-                  {/* Right Analytics metrics based on Scan Model */}
                   <div className="flex items-center justify-between md:justify-end w-full md:w-auto gap-6 sm:gap-8 pt-3 md:pt-0 border-t md:border-t-0 border-white/5">
                     <div className="flex items-center gap-4 sm:gap-6 text-center">
                       <div>

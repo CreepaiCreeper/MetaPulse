@@ -150,7 +150,6 @@ const Page = () => {
 
   return (
     <div className="bg-[#030712] min-h-screen w-full text-white font-sans">
-      {/* Analysis Overlay Modal */}
       {isAnalyzing && (
         <div className="fixed inset-0 z-50 bg-[#030712]/90 backdrop-blur-md flex flex-col items-center justify-center p-4">
           <div className="p-8 sm:p-10 rounded-3xl bg-[#0a0f1d] border-2 border-lime-400/80 shadow-[0_0_60px_rgba(163,230,53,0.35)] max-w-md w-full flex flex-col items-center text-center relative overflow-hidden transition-all">
@@ -203,7 +202,6 @@ const Page = () => {
       )}
 
       <main className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        {/* Welcome Banner */}
         <div className="flex flex-col gap-1 text-left select-none">
           <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-lime-400 drop-shadow-[0_0_20px_rgba(163,230,53,0.35)]">
             Welcome back
