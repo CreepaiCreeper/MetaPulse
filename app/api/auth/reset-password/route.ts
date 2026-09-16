@@ -27,7 +27,6 @@ export async function POST(req: Request) {
     if (!user) {
       return NextResponse.json(
         { message: "Invalid or expired reset token" },
-        { status: 400 },
       );
     }
 

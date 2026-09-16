@@ -1,39 +1,34 @@
 import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
 import crypto from "crypto";
-import { Resend } from "resend";
+import { sendMail, passwordResetTemplate } from "@/lib/mailer";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+export const runtime = "nodejs";
 
 export async function POST(req: Request) {
   try {
     const { email } = await req.json();
 
     if (!email) {
-      return NextResponse.json(
-        { message: "Email is required" },
-        { status: 400 }
-      );
+      return NextResponse.json({ message: "Email is required" }, { status: 400 });
     }
 
+    const normalizedEmail = email.toLowerCase().trim();
+
     const user = await prisma.user.findUnique({
-      where: { email: email.toLowerCase().trim() },
+      where: { email: normalizedEmail },
     });
+    const genericResponse = NextResponse.json(
+      { message: "If an account exists for that email, a reset link has been sent." },
+      { status: 200 },
+    );
 
     if (!user) {
-      return NextResponse.json(
-        { message: "No account found with this email address" },
-        { status: 404 }
-      );
+      return genericResponse;
     }
 
     const resetToken = crypto.randomBytes(32).toString("hex");
-
-    const resetTokenHash = crypto
-      .createHash("sha256")
-      .update(resetToken)
-      .digest("hex");
-
+    const resetTokenHash = crypto.createHash("sha256").update(resetToken).digest("hex");
     const tokenExpiry = new Date(Date.now() + 3600000); // 1 hour
 
     await prisma.user.update({
@@ -43,45 +38,42 @@ export async function POST(req: Request) {
         resetTokenExpiry: tokenExpiry,
       },
     });
+    const origin =
+      process.env.NEXT_PUBLIC_APP_URL ||
+      req.headers.get("origin") ||
+      "http://localhost:3000";
+    const resetUrl = `${origin.replace(/\/$/, "")}/reset-password?token=${resetToken}`;
 
-    const origin = req.headers.get("origin") || "http://localhost:3000";
-    const resetUrl = `${origin}/reset-password?token=${resetToken}`;
-
-    const { data, error } = await resend.emails.send({
-      from: "MetaPulse <onboarding@resend.dev>", 
+    const result = await sendMail({
       to: user.email,
-      subject: "Reset Your Password",
-      html: `
-        <div style="font-family: sans-serif; background-color: #030712; color: #f1f5f9; padding: 40px; border-radius: 12px;">
-          <h2 style="color: #ffffff;">Password Reset Request</h2>
-          <p style="color: #94a3b8; font-size: 14px;">
-            You requested to reset your password. Click the button below to set a new password. This link is valid for 1 hour.
-          </p>
-          <a href="${resetUrl}" style="display: inline-block; background-color: #f8fafc; color: #0f172a; padding: 12px 24px; font-weight: 600; font-size: 14px; border-radius: 8px; text-decoration: none; margin-top: 16px;">
-            Reset Password
-          </a>
-          <p style="color: #64748b; font-size: 12px; margin-top: 24px;">
-            If you didn't request this, you can safely ignore this email.
-          </p>
-        </div>
-      `,
+      subject: "Reset Your MetaPulse Password",
+      html: passwordResetTemplate(resetUrl),
     });
 
-    if (error) {
-      console.error("Resend Error:", error);
-      return NextResponse.json({ message: error.message }, { status: 500 });
+    if (!result.ok) {
+      console.error("Password reset email failed:", result.error);
+
+      if (process.env.NODE_ENV !== "production") {
+        console.log(`\n[MetaPulse DEV] Reset link for ${user.email}:\n${resetUrl}\n`);
+        return NextResponse.json(
+          {
+            message: "Email sending failed, but a reset link was printed to your server console.",
+            devResetUrl: resetUrl,
+            devError: result.error,
+          },
+          { status: 200 },
+        );
+      }
+
+      return NextResponse.json(
+        { message: "We couldn't send the reset email right now. Please try again later." },
+        { status: 500 },
+      );
     }
 
-    return NextResponse.json(
-      { message: "Reset link has been sent." },
-      { status: 200 }
-    );
-} catch (error: unknown) {
+    return genericResponse;
+  } catch (error: unknown) {
     console.error("Forgot password error:", error);
-    const errorMessage = error instanceof Error ? error.message : "Internal server error";
-    return NextResponse.json(
-      { message: errorMessage },
-      { status: 500 }
-    );
+    return NextResponse.json({ message: "Internal server error" }, { status: 500 });
   }
 }
