@@ -34,9 +34,6 @@ export async function POST(request: NextRequest) {
 
     const overallScore = aiResult.score ?? 0;
 
-    // These two are computed from real scraped signals we do have.
-    // The others (performance / bestPractices) fall back to the overall
-    // AI score until ai-analyzer.ts returns real per-category numbers.
     const accessibilityScore = Math.max(
       0,
       100 - (scrapedData.missingAltCount || 0) * 5,
@@ -51,14 +48,6 @@ export async function POST(request: NextRequest) {
       ),
     );
 
-    // Build a real issues list out of the AI's critical fixes + scraped signals.
-    // NOTE: lib/scraper.ts and lib/ai-analyzer.ts weren't in the upload, so this
-    // route only knows about metaTitle, metaDescription, h1Count,
-    // missingAltCount, wordCount, score, summary and criticalFixes. If your
-    // scraper/analyzer already return richer data (link counts, h2-h6 counts,
-    // keyword density, meta tag list, per-category scores), send me those two
-    // files and I'll wire the real values through instead of the 0/N/A
-    // placeholders below.
     const issues: Array<{
       id: string;
       type: "critical" | "warning" | "info";
