@@ -180,7 +180,7 @@ const Page = () => {
   ];
 
   return (
-    <div className="bg-[#030712] min-h-screen w-full flex flex-col items-center px-4 pb-24">
+    <div className="bg-[#030712] min-h-screen w-full flex flex-col items-center px-4">
       {isAnalyzing && (
         <div className="fixed inset-0 z-50 bg-[#030712]/90 backdrop-blur-md flex flex-col items-center justify-center p-4">
           <div className="p-8 sm:p-10 rounded-3xl bg-[#0a0f1d] border-2 border-lime-400/80 shadow-[0_0_60px_rgba(163,230,53,0.35)] max-w-md w-full flex flex-col items-center text-center relative overflow-hidden transition-all">
@@ -303,7 +303,7 @@ const Page = () => {
         </span>
 
         {/* Wave Animation */}
-        <div className="bottom-0 mt-10 lg:mt-48 left-0 w-screen lg:w-[205vh] overflow-hidden pointer-events-none z-0">
+        <div className="relative left-1/2 -translate-x-1/2 mt-10 lg:mt-48 w-screen overflow-hidden pointer-events-none z-0">
           <HomeWave />
         </div>
       </div>
@@ -413,7 +413,7 @@ const Page = () => {
       </div>
 
       {/* Footer */}
-      <div className="bottom-0 w-full mt-30">
+      <div className="w-full mt-30">
         <Footer />
       </div>
     </div>
