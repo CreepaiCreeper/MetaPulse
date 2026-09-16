@@ -1,36 +1,75 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+<div align="center">
 
-## Getting Started
+# ⚡ MetaPulse — AI Web Intelligence
 
-First, run the development server:
+**Instant AI-powered SEO, performance, and accessibility audits.**
 
+[![Next.js 15](https://img.shields.io/badge/Next.js_15-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
+[![Prisma](https://img.shields.io/badge/Prisma-2D3748?style=for-the-badge&logo=prisma&logoColor=white)](https://www.prisma.io/)
+
+</div>
+
+---
+
+## 🌟 Overview
+
+**MetaPulse** scans websites against 70+ technical signals, Core Web Vitals, and security factors—turning raw audit metrics into actionable, AI-generated code fixes in seconds.
+
+---
+
+## ✨ Core Features
+
+- 🎯 **Deep Technical Audit:** Scans meta tags, canonicals, indexability, and heading structures.
+- ⚡ **Core Web Vitals:** Real-time tracking for LCP, CLS, and page load speed.
+- 🧠 **AI-Powered Solutions:** Auto-generated code snippets and priority fixes.
+- 🔒 **Security Check:** SSL health, security headers, and domain trust validation.
+- 🔖 **Report Management:** Save, track, and delete historical scan reports easily.
+
+---
+
+## 🛠️ Tech Stack
+
+- **Frontend:** Next.js 15 (App Router), React, TypeScript, Tailwind CSS
+- **Backend:** Next.js API Routes, JWT Authentication
+- **Database & ORM:** PostgreSQL, Prisma ORM
+
+---
+
+## 🚀 Step-by-Step Setup Guide
+
+### Step 1: Clone & Install Dependencies
 ```bash
+git clone [https://github.com/your-username/metapulse.git](https://github.com/your-username/metapulse.git)
+cd metapulse
+npm install
+
+Step 2: Configure Environment Variables
+Create a .env file in the root directory:
+
+DATABASE_URL="postgresql://username:password@localhost:5432/metapulse"
+JWT_SECRET="your_secure_jwt_secret"
+
+Step 3: Set Up Database
+Push the Prisma schema to your PostgreSQL database and generate client types:
+
+npx prisma db push
+npx prisma generate
+
+Step 4: Run Development Server
+
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000 in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+📖 How to Use MetaPulse
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1.Enter URL: Paste any live website URL into the main search input.
+2.Run Analysis: Click Analyze to generate a real-time technical & SEO audit report.
+3.Review Metrics: View Core Web Vitals, meta configuration, and security scores.
+4.Apply AI Fixes: Copy the AI-recommended code snippets directly into your codebase.
+5.Save & Manage: Bookmark scan results or delete old reports directly from your dashboard.
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Crafted with by MetaPulse
