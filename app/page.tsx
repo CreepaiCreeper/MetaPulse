@@ -302,10 +302,10 @@ const Page = () => {
           Free — No credit card required • 5 analyses per day
         </span>
 
-        {/* Wave Animation */}
-        <div className="relative left-1/2 -translate-x-1/2 mt-10 lg:mt-48 w-screen overflow-hidden pointer-events-none z-0">
-          <HomeWave />
-        </div>
+      </div>
+
+      <div className="w-[calc(100%+2rem)] -mx-4 mt-10 lg:mt-48 overflow-hidden pointer-events-none z-0">
+        <HomeWave />
       </div>
 
       {/* Features Section */}
