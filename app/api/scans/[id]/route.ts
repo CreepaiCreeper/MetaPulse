@@ -2,6 +2,10 @@ import prisma from "@/lib/prisma";
 import jwt from "jsonwebtoken";
 import { NextRequest, NextResponse } from "next/server";
 
+type RouteParams = {
+  params: Promise<{ id: string }>;
+};
+
 function getUserId(request: NextRequest): string | null {
   const token = request.cookies.get("token")?.value;
   if (!token) return null;
@@ -13,11 +17,18 @@ function getUserId(request: NextRequest): string | null {
   }
 }
 
-// 1. GET Single Scan Detail
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+function safeJsonParse(data: unknown) {
+  if (data === null || data === undefined) return null;
+  if (typeof data === "object") return data;
+  try {
+    return typeof data === "string" ? JSON.parse(data) : data;
+  } catch (err) {
+    console.error("JSON parse error for value:", data, err);
+    return data;
+  }
+}
+
+export async function GET(request: NextRequest, { params }: RouteParams) {
   try {
     const userId = getUserId(request);
     if (!userId) {
@@ -32,7 +43,7 @@ export async function GET(
     const scan = await prisma.scan.findFirst({
       where: {
         id,
-        userId, 
+        userId,
       },
     });
 
@@ -43,9 +54,25 @@ export async function GET(
       );
     }
 
-    return NextResponse.json({ success: true, scan });
+    const reportData = {
+      id: scan.id,
+      url: scan.url,
+      timestamp: scan.createdAt ? new Date(scan.createdAt).toLocaleString() : new Date().toLocaleString(),
+      createdAt: scan.createdAt,
+      scores: safeJsonParse(scan.scores),
+      quickStats: safeJsonParse(scan.quickStats),
+      issuesSummary: safeJsonParse(scan.issuesSummary),
+      issues: safeJsonParse(scan.issues),
+      linksAnalysis: safeJsonParse(scan.linksAnalysis),
+      imagesAudit: safeJsonParse(scan.imagesAudit),
+      headingStructure: safeJsonParse(scan.headingStructure),
+      topKeywords: safeJsonParse(scan.topKeywords),
+      metaTags: safeJsonParse(scan.metaTags),
+    };
+
+    return NextResponse.json({ success: true, report: reportData, scan: reportData });
   } catch (error) {
-    console.error("Fetch single scan error:", error);
+    console.error("Fetch scan error:", error);
     return NextResponse.json(
       { success: false, message: "Internal server error" },
       { status: 500 }
@@ -53,11 +80,7 @@ export async function GET(
   }
 }
 
-// 2. DELETE Single Scan
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function DELETE(request: NextRequest, { params }: RouteParams) {
   try {
     const userId = getUserId(request);
     if (!userId) {

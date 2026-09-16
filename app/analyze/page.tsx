@@ -19,7 +19,6 @@ const Analyze = () => {
     "Generating Final Report...",
   ];
 
-  // Step Animation Interval
   useEffect(() => {
     let interval: NodeJS.Timeout;
     if (isAnalyzing) {
@@ -34,7 +33,6 @@ const Analyze = () => {
     return () => clearInterval(interval);
   }, [isAnalyzing, analysisSteps.length]);
 
-  // Lock background scroll during analysis overlay
   useEffect(() => {
     if (isAnalyzing) {
       document.body.style.overflow = "hidden";
@@ -81,7 +79,6 @@ const Analyze = () => {
 
   return (
     <div className="bg-[#030712] min-h-[calc(100vh-4rem)] w-full flex flex-col justify-between lg:mt-20 relative">
-      {/* Overlay Modal for Analyzing State */}
       {isAnalyzing && (
         <div className="fixed inset-0 z-50 bg-[#030712]/90 backdrop-blur-md flex flex-col items-center justify-center p-4">
           <div className="p-8 sm:p-10 rounded-3xl bg-[#0a0f1d] border-2 border-lime-400/80 shadow-[0_0_60px_rgba(163,230,53,0.35)] max-w-md w-full flex flex-col items-center text-center relative overflow-hidden transition-all">
@@ -135,7 +132,6 @@ const Analyze = () => {
 
       <main className="flex-1 flex flex-col items-center justify-center px-4 py-16">
         <div className="flex flex-col items-center w-full max-w-4xl text-center">
-          {/* Credits Badge */}
           <div className="mb-6 flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-lime-500/30 bg-lime-500/10 shadow-[0_0_15px_rgba(163,230,53,0.15)]">
             <span className="w-2 h-2 rounded-full bg-lime-400 animate-pulse" />
             <span className="text-lime-400 text-xs font-semibold tracking-wide">
@@ -143,7 +139,6 @@ const Analyze = () => {
             </span>
           </div>
 
-          {/* Main Heading */}
           <h1 className="text-3xl sm:text-5xl lg:text-6xl font-bold text-lime-400 select-none drop-shadow-[0_0_35px_rgba(163,230,53,0.35)] transform-gpu will-change-transform tracking-tight">
             Deep Site
           </h1>
@@ -156,7 +151,6 @@ const Analyze = () => {
             bottlenecks in seconds.
           </p>
 
-          {/* Input Box Section */}
           <div className="mt-8 w-full max-w-xl px-2">
             <form
               onSubmit={handleAnalyze}
@@ -196,7 +190,6 @@ const Analyze = () => {
             )}
           </div>
 
-          {/* Feature Badges */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-12 w-full max-w-2xl px-2">
             <div className="flex items-center justify-center gap-2.5 p-3.5 rounded-xl bg-[#0a0f1d]/50 border border-white/5 shadow-sm">
               <Zap className="w-4 h-4 text-lime-400" />
