@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import { Search, ExternalLink, Trash2, Clock, Plus, Loader2 } from "lucide-react";
+import { Search, ExternalLink, Trash2, Plus, Loader2, AlertTriangle, X } from "lucide-react";
 
 interface ScanItem {
   id: string;
@@ -22,6 +22,12 @@ const Page = () => {
   const [data, setData] = useState<ScanItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+
+  // Custom confirm modal state — replaces the native window.confirm() that
+  // used to drop down from the top of the browser.
+  const [confirmTarget, setConfirmTarget] = useState<ScanItem | null>(null);
+  // Small toast for delete failures — replaces window.alert().
+  const [toast, setToast] = useState<string | null>(null);
 
   const fetchHistory = useCallback(async () => {
     try {
@@ -50,8 +56,32 @@ const Page = () => {
     fetchHistory();
   }, [fetchHistory]);
 
-  const handleDelete = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this analysis entry?")) return;
+  // Auto-dismiss the toast
+  useEffect(() => {
+    if (!toast) return;
+    const t = setTimeout(() => setToast(null), 3500);
+    return () => clearTimeout(t);
+  }, [toast]);
+
+  // Lock background scroll + allow Esc to close while the modal is open
+  useEffect(() => {
+    if (!confirmTarget) return;
+
+    document.body.style.overflow = "hidden";
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setConfirmTarget(null);
+    };
+    window.addEventListener("keydown", onKeyDown);
+
+    return () => {
+      document.body.style.overflow = "unset";
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [confirmTarget]);
+
+  const handleConfirmDelete = async () => {
+    if (!confirmTarget) return;
+    const id = confirmTarget.id;
 
     try {
       setDeletingId(id);
@@ -62,12 +92,15 @@ const Page = () => {
 
       if (res.ok) {
         setData((prev) => prev.filter((item) => item.id !== id));
+        setConfirmTarget(null);
       } else {
-        alert("Failed to delete entry. Please try again.");
+        setConfirmTarget(null);
+        setToast("Failed to delete entry. Please try again.");
       }
     } catch (error) {
       console.error("Error deleting history entry:", error);
-      alert("Something went wrong while deleting.");
+      setConfirmTarget(null);
+      setToast("Something went wrong while deleting.");
     } finally {
       setDeletingId(null);
     }
@@ -83,6 +116,34 @@ const Page = () => {
     return { text: "text-red-500", stroke: "#ef4444" };
   };
 
+  // --- Metric colors ---
+  // Each metric is now colored by what the number actually means, instead of
+  // every stat being the same flat zinc-200.
+  const getWordCountColor = (count: number) => {
+    if (count >= 300) return "text-[#10b981]";
+    if (count >= 150) return "text-amber-400";
+    return "text-red-400";
+  };
+
+  const getH1Color = (count: number) => {
+    if (count === 1) return "text-[#10b981]";
+    if (count === 0) return "text-red-400";
+    return "text-amber-400";
+  };
+
+  const getNoAltColor = (count: number) => {
+    if (count === 0) return "text-[#10b981]";
+    if (count <= 5) return "text-amber-400";
+    return "text-red-400";
+  };
+
+  const getSpeedColor = (ms: number | null) => {
+    if (ms === null) return "text-zinc-500";
+    if (ms <= 1500) return "text-[#10b981]";
+    if (ms <= 3000) return "text-amber-400";
+    return "text-red-400";
+  };
+
   const filteredData = data.filter(
     (item) =>
       item.metaTitle?.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -91,6 +152,98 @@ const Page = () => {
 
   return (
     <div className="bg-[#030712] min-h-screen w-full flex flex-col justify-between text-white">
+      {/* ---- Delete Confirmation Modal (centered, blurred backdrop) ---- */}
+      {confirmTarget && (
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-in fade-in duration-200"
+          onClick={() => setConfirmTarget(null)}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="delete-modal-title"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="relative w-full max-w-md p-6 sm:p-7 rounded-3xl bg-[#0a0f1d] border border-red-500/30 shadow-[0_0_60px_rgba(239,68,68,0.2)] overflow-hidden"
+          >
+            {/* Ambient glow accents */}
+            <div className="absolute -top-12 -left-12 w-32 h-32 bg-red-500/20 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute -bottom-12 -right-12 w-32 h-32 bg-red-500/10 rounded-full blur-3xl pointer-events-none" />
+
+            <button
+              type="button"
+              onClick={() => setConfirmTarget(null)}
+              className="absolute top-4 right-4 p-1.5 rounded-lg text-zinc-500 hover:text-white hover:bg-white/5 transition-colors"
+              aria-label="Close"
+            >
+              <X className="w-4 h-4" />
+            </button>
+
+            <div className="relative flex flex-col items-center text-center">
+              <div className="flex items-center justify-center w-14 h-14 rounded-2xl bg-red-500/10 border border-red-500/20 mb-4">
+                <AlertTriangle className="w-7 h-7 text-red-400" />
+              </div>
+
+              <h3 id="delete-modal-title" className="text-lg font-bold text-white mb-2">
+                Delete this analysis?
+              </h3>
+
+              <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed mb-1">
+                This will permanently remove the scan record for
+              </p>
+              <p className="text-sm font-semibold text-lime-400 truncate max-w-full mb-4">
+                {confirmTarget.metaTitle || confirmTarget.url}
+              </p>
+              <p className="text-[11px] text-zinc-500 mb-6">This action cannot be undone.</p>
+
+              <div className="grid grid-cols-2 gap-3 w-full">
+                <button
+                  type="button"
+                  onClick={() => setConfirmTarget(null)}
+                  disabled={deletingId === confirmTarget.id}
+                  className="px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-zinc-300 hover:text-white hover:bg-white/10 text-xs font-bold transition-all active:scale-95 disabled:opacity-50 cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={handleConfirmDelete}
+                  disabled={deletingId === confirmTarget.id}
+                  className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-red-500 hover:bg-red-400 text-white text-xs font-bold shadow-[0_0_20px_rgba(239,68,68,0.35)] transition-all active:scale-95 disabled:opacity-60 cursor-pointer"
+                >
+                  {deletingId === confirmTarget.id ? (
+                    <>
+                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      <span>Deleting...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Trash2 className="w-3.5 h-3.5" />
+                      <span>Delete</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ---- Error Toast (bottom center) ---- */}
+      {toast && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[110] flex items-center gap-2.5 px-4 py-3 rounded-xl bg-[#0a0f1d] border border-red-500/30 shadow-[0_0_30px_rgba(239,68,68,0.2)]">
+          <AlertTriangle className="w-4 h-4 text-red-400 shrink-0" />
+          <span className="text-xs font-medium text-zinc-200">{toast}</span>
+          <button
+            type="button"
+            onClick={() => setToast(null)}
+            className="ml-2 p-1 rounded text-zinc-500 hover:text-white transition-colors"
+            aria-label="Dismiss"
+          >
+            <X className="w-3.5 h-3.5" />
+          </button>
+        </div>
+      )}
+
       <main className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex-1">
         {/* Header */}
         <div className="flex items-center justify-between gap-4 pb-8 border-b border-white/10">
@@ -155,7 +308,7 @@ const Page = () => {
               return (
                 <div
                   key={item.id}
-                  className="flex flex-col md:flex-row items-start md:items-center justify-between p-4 sm:p-5 rounded-2xl bg-[#0a0f1d]/60 border border-white/5 hover:border-white/10 transition-all duration-200 gap-4"
+                  className="flex flex-col md:flex-row items-start md:items-center justify-between p-4 sm:p-5 rounded-2xl bg-[#0a0f1d]/60 border border-white/5 hover:border-lime-500/20 transition-all duration-200 gap-4"
                 >
                   <div className="flex items-center gap-4">
                     {/* Circle Score Gauge */}
@@ -190,14 +343,14 @@ const Page = () => {
 
                     {/* Site Details */}
                     <div className="flex flex-col gap-1">
-                      <h3 className="font-bold text-sm sm:text-base text-zinc-100 truncate max-w-[250px] sm:max-w-[400px]">
+                      <h3 className="font-bold text-sm sm:text-base text-lime-400 drop-shadow-[0_0_12px_rgba(163,230,53,0.25)] truncate max-w-[250px] sm:max-w-[400px]">
                         {item.metaTitle || item.url}
                       </h3>
                       <a
                         href={item.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-xs text-zinc-400 hover:text-zinc-200 truncate max-w-[200px] sm:max-w-[300px]"
+                        className="text-xs text-zinc-400 hover:text-lime-400 truncate max-w-[200px] sm:max-w-[300px] transition-colors"
                       >
                         {item.url}
                       </a>
@@ -221,19 +374,25 @@ const Page = () => {
                   <div className="flex items-center justify-between md:justify-end w-full md:w-auto gap-6 sm:gap-8 pt-3 md:pt-0 border-t md:border-t-0 border-white/5">
                     <div className="flex items-center gap-4 sm:gap-6 text-center">
                       <div>
-                        <div className="font-bold text-sm text-zinc-200">{item.wordCount}</div>
+                        <div className={`font-bold text-sm ${getWordCountColor(item.wordCount)}`}>
+                          {item.wordCount}
+                        </div>
                         <div className="text-[10px] text-zinc-500 uppercase font-semibold">Words</div>
                       </div>
                       <div>
-                        <div className="font-bold text-sm text-zinc-200">{item.h1Count}</div>
+                        <div className={`font-bold text-sm ${getH1Color(item.h1Count)}`}>
+                          {item.h1Count}
+                        </div>
                         <div className="text-[10px] text-zinc-500 uppercase font-semibold">H1s</div>
                       </div>
                       <div>
-                        <div className="font-bold text-sm text-zinc-200">{item.missingAltCount}</div>
+                        <div className={`font-bold text-sm ${getNoAltColor(item.missingAltCount)}`}>
+                          {item.missingAltCount}
+                        </div>
                         <div className="text-[10px] text-zinc-500 uppercase font-semibold">No-Alt</div>
                       </div>
                       <div>
-                        <div className="font-bold text-sm text-zinc-200">
+                        <div className={`font-bold text-sm ${getSpeedColor(item.loadTimeMs)}`}>
                           {item.loadTimeMs ? `${item.loadTimeMs}ms` : "N/A"}
                         </div>
                         <div className="text-[10px] text-zinc-500 uppercase font-semibold">Speed</div>
@@ -246,16 +405,16 @@ const Page = () => {
                         href={item.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="p-2 text-zinc-400 hover:text-zinc-100 rounded-lg hover:bg-white/5 transition-colors"
+                        className="p-2 text-zinc-400 hover:text-lime-400 rounded-lg hover:bg-white/5 transition-colors"
                         title="Open URL"
                       >
                         <ExternalLink className="w-4 h-4" />
                       </a>
                       <button
                         type="button"
-                        onClick={() => handleDelete(item.id)}
+                        onClick={() => setConfirmTarget(item)}
                         disabled={deletingId === item.id}
-                        className="p-2 text-zinc-400 hover:text-red-400 rounded-lg hover:bg-white/5 transition-colors disabled:opacity-50"
+                        className="p-2 text-zinc-400 hover:text-red-400 rounded-lg hover:bg-white/5 transition-colors disabled:opacity-50 cursor-pointer"
                         title="Delete entry"
                       >
                         {deletingId === item.id ? (
