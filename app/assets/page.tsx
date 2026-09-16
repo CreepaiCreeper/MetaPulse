@@ -8,7 +8,7 @@ export const HomeWave = () => (
       .parallax > use {
         animation: move-forever 25s cubic-bezier(.55,.5,.45,.5) infinite;
       }
-      .parallax > use:nth-child(1) { animation-delay: -2s; animation-duration: 7s; }
+      <div className="parallax"></div> > use:nth-child(1) { animation-delay: -2s; animation-duration: 7s; }
       .parallax > use:nth-child(2) { animation-delay: -3s; animation-duration: 10s; }
       .parallax > use:nth-child(3) { animation-delay: -4s; animation-duration: 13s; }
       .parallax > use:nth-child(4) { animation-delay: -5s; animation-duration: 20s; }
