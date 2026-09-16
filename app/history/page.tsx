@@ -202,7 +202,15 @@ const Page = () => {
                         {item.url}
                       </a>
                       <div className="flex items-center gap-3 mt-1 text-xs text-zinc-500">
-                        <span className="px-2 py-0.5 rounded-full bg-[#10b981]/10 text-[#10b981] text-[10px] font-medium border border-[#10b981]/20">
+                        <span
+                          className={`px-2 py-0.5 rounded-full text-[10px] font-medium border ${
+                            item.status === "COMPLETED"
+                              ? "bg-[#10b981]/10 text-[#10b981] border-[#10b981]/20"
+                              : item.status === "FAILED"
+                              ? "bg-red-500/10 text-red-400 border-red-500/20"
+                              : "bg-amber-500/10 text-amber-400 border-amber-500/20"
+                          }`}
+                        >
                           {item.status}
                         </span>
                       </div>

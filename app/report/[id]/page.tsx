@@ -13,6 +13,11 @@ import {
   Loader2,
   Link2,
   Trash2,
+  Image as ImageIcon,
+  Type,
+  Tag,
+  FileText,
+  Info,
 } from "lucide-react";
 
 interface ScanData {
@@ -79,6 +84,18 @@ const getScoreColor = (score: number) => {
   if (score >= 80) return { text: "text-lime-400", stroke: "#a3e635" };
   if (score >= 50) return { text: "text-amber-500", stroke: "#f59e0b" };
   return { text: "text-red-500", stroke: "#ef4444" };
+};
+
+const getIssueBadgeClasses = (type: "critical" | "warning" | "info") => {
+  if (type === "critical") return "bg-red-500/20 text-red-400 border-red-500/30";
+  if (type === "warning") return "bg-amber-500/20 text-amber-400 border-amber-500/30";
+  return "bg-blue-500/20 text-blue-400 border-blue-500/30";
+};
+
+const getStatusDotClasses = (status: "good" | "warning" | "error") => {
+  if (status === "good") return "bg-lime-400 shadow-[0_0_8px_rgba(163,230,53,0.8)]";
+  if (status === "warning") return "bg-amber-400 shadow-[0_0_8px_rgba(245,158,11,0.8)]";
+  return "bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.8)]";
 };
 
 export default function ReportPage() {
@@ -159,10 +176,30 @@ export default function ReportPage() {
     return issue.type === issueFilter;
   });
 
+  const heading = scan.headingStructure || {
+    h1: 0,
+    h2: 0,
+    h3: 0,
+    h4: 0,
+    h5: 0,
+    h6: 0,
+    h1Text: "",
+  };
+  const headingLevels: Array<{ label: string; count: number }> = [
+    { label: "H1", count: heading.h1 || 0 },
+    { label: "H2", count: heading.h2 || 0 },
+    { label: "H3", count: heading.h3 || 0 },
+    { label: "H4", count: heading.h4 || 0 },
+    { label: "H5", count: heading.h5 || 0 },
+    { label: "H6", count: heading.h6 || 0 },
+  ];
+  const maxHeadingCount = Math.max(1, ...headingLevels.map((h) => h.count));
+  const totalHeadings = headingLevels.reduce((sum, h) => sum + h.count, 0);
+  const maxKeywordCount = Math.max(1, ...(scan.topKeywords || []).map((k) => k.count));
+
   return (
     <div className="min-h-screen bg-[#030712] text-zinc-100 font-sans pb-20 selection:bg-lime-500/30">
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 lg:pt-24">
-        
         {/* Navigation & Actions */}
         <div className="flex items-center justify-between mb-4">
           <button
@@ -204,7 +241,6 @@ export default function ReportPage() {
         {/* Scoreboard Cards */}
         <div className="p-6 rounded-2xl bg-[#0a0f1d]/60 border border-white/5 mb-8 shadow-xl">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
-            
             <div className="lg:col-span-3 flex flex-col items-center justify-center border-b lg:border-b-0 lg:border-r border-white/5 pb-6 lg:pb-0 lg:pr-6">
               <div className="relative w-36 h-36 flex items-center justify-center">
                 <svg className="w-full h-full -rotate-90 transform" viewBox="0 0 100 100">
@@ -302,90 +338,308 @@ export default function ReportPage() {
                   : "text-zinc-400 hover:text-white bg-white/5 hover:bg-white/10"
               }`}
             >
-              {tab === "issues" ? `Issues (${scan.issues?.length || 0})` : tab}
+              {tab === "issues" ? `Issues (${scan.issues?.length || 0})` : tab === "meta" ? "Meta Tags" : tab}
             </button>
           ))}
         </div>
 
-        {/* Active Tab View */}
+        {/* Overview Tab */}
         {activeTab === "overview" && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div className="space-y-6">
-              <div className="p-5 rounded-2xl bg-[#0a0f1d]/60 border border-white/5">
-                <div className="flex items-center gap-2 mb-4">
-                  <AlertTriangle className="w-4 h-4 text-amber-400" />
-                  <h3 className="text-sm font-bold text-white">Issues Summary</h3>
-                </div>
+          <>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="space-y-6">
+                <div className="p-5 rounded-2xl bg-[#0a0f1d]/60 border border-white/5">
+                  <div className="flex items-center gap-2 mb-4">
+                    <AlertTriangle className="w-4 h-4 text-amber-400" />
+                    <h3 className="text-sm font-bold text-white">Issues Summary</h3>
+                  </div>
 
-                <div className="grid grid-cols-3 gap-3 mb-5">
-                  <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-center">
-                    <p className="text-xl font-bold text-red-400">{scan.issuesSummary?.critical || 0}</p>
-                    <p className="text-[10px] font-semibold text-red-400/80">Critical</p>
-                  </div>
-                  <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/20 text-center">
-                    <p className="text-xl font-bold text-amber-400">{scan.issuesSummary?.warnings || 0}</p>
-                    <p className="text-[10px] font-semibold text-amber-400/80">Warnings</p>
-                  </div>
-                  <div className="p-3 rounded-xl bg-blue-500/10 border border-blue-500/20 text-center">
-                    <p className="text-xl font-bold text-blue-400">{scan.issuesSummary?.info || 0}</p>
-                    <p className="text-[10px] font-semibold text-blue-400/80">Info</p>
-                  </div>
-                </div>
-
-                <div className="space-y-3">
-                  {(scan.issues || []).slice(0, 3).map((issue) => (
-                    <div
-                      key={issue.id}
-                      className="p-3 rounded-xl bg-[#0f1420] border border-white/5 flex items-start justify-between gap-3"
-                    >
-                      <div className="space-y-1">
-                        <div className="flex items-center gap-2">
-                          <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30">
-                            {issue.type}
-                          </span>
-                          <span className="text-[11px] text-zinc-500 font-medium">{issue.category}</span>
-                        </div>
-                        <p className="text-xs text-zinc-300 font-medium leading-relaxed">{issue.message}</p>
-                      </div>
+                  <div className="grid grid-cols-3 gap-3 mb-5">
+                    <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-center">
+                      <p className="text-xl font-bold text-red-400">{scan.issuesSummary?.critical || 0}</p>
+                      <p className="text-[10px] font-semibold text-red-400/80">Critical</p>
                     </div>
-                  ))}
+                    <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/20 text-center">
+                      <p className="text-xl font-bold text-amber-400">{scan.issuesSummary?.warnings || 0}</p>
+                      <p className="text-[10px] font-semibold text-amber-400/80">Warnings</p>
+                    </div>
+                    <div className="p-3 rounded-xl bg-blue-500/10 border border-blue-500/20 text-center">
+                      <p className="text-xl font-bold text-blue-400">{scan.issuesSummary?.info || 0}</p>
+                      <p className="text-[10px] font-semibold text-blue-400/80">Info</p>
+                    </div>
+                  </div>
+
+                  <div className="space-y-3">
+                    {(scan.issues || []).slice(0, 3).map((issue) => (
+                      <div
+                        key={issue.id}
+                        className="p-3 rounded-xl bg-[#0f1420] border border-white/5 flex items-start justify-between gap-3"
+                      >
+                        <div className="space-y-1">
+                          <div className="flex items-center gap-2">
+                            <span className={`px-2 py-0.5 rounded text-[10px] font-bold border capitalize ${getIssueBadgeClasses(issue.type)}`}>
+                              {issue.type}
+                            </span>
+                            <span className="text-[11px] text-zinc-500 font-medium">{issue.category}</span>
+                          </div>
+                          <p className="text-xs text-zinc-300 font-medium leading-relaxed">{issue.message}</p>
+                        </div>
+                      </div>
+                    ))}
+                    {(scan.issues || []).length === 0 && (
+                      <p className="text-xs text-zinc-500 text-center py-4">No issues found. Nice and clean!</p>
+                    )}
+                  </div>
+
+                  {(scan.issues || []).length > 3 && (
+                    <button
+                      onClick={() => setActiveTab("issues")}
+                      className="w-full mt-4 text-center text-xs font-semibold text-lime-400 hover:text-lime-300 transition-colors"
+                    >
+                      View all {scan.issues.length} issues →
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              <div className="space-y-6">
+                <div className="p-5 rounded-2xl bg-[#0a0f1d]/60 border border-white/5">
+                  <div className="flex items-center gap-2 mb-4">
+                    <Link2 className="w-4 h-4 text-lime-400" />
+                    <h3 className="text-sm font-bold text-white">Links Analysis</h3>
+                  </div>
+                  <div className="grid grid-cols-3 gap-3">
+                    <div className="p-3 rounded-xl bg-[#0f1420] border border-white/5 text-center">
+                      <p className="text-xl font-bold text-white">{scan.linksAnalysis?.internal || 0}</p>
+                      <p className="text-[10px] text-zinc-500 font-medium">Internal</p>
+                    </div>
+                    <div className="p-3 rounded-xl bg-[#0f1420] border border-white/5 text-center">
+                      <p className="text-xl font-bold text-white">{scan.linksAnalysis?.external || 0}</p>
+                      <p className="text-[10px] text-zinc-500 font-medium">External</p>
+                    </div>
+                    <div className="p-3 rounded-xl bg-[#0f1420] border border-white/5 text-center">
+                      <p className="text-xl font-bold text-lime-400">{scan.linksAnalysis?.total || 0}</p>
+                      <p className="text-[10px] text-zinc-500 font-medium">Total</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="p-5 rounded-2xl bg-[#0a0f1d]/60 border border-white/5">
+                  <div className="flex items-center gap-2 mb-4">
+                    <ImageIcon className="w-4 h-4 text-lime-400" />
+                    <h3 className="text-sm font-bold text-white">Images Audit</h3>
+                  </div>
+                  <div className="grid grid-cols-3 gap-3">
+                    <div className="p-3 rounded-xl bg-[#0f1420] border border-white/5 text-center">
+                      <p className="text-xl font-bold text-white">{scan.imagesAudit?.total || 0}</p>
+                      <p className="text-[10px] text-zinc-500 font-medium">Total</p>
+                    </div>
+                    <div className="p-3 rounded-xl bg-[#0f1420] border border-white/5 text-center">
+                      <p className="text-xl font-bold text-lime-400">{scan.imagesAudit?.withAlt || 0}</p>
+                      <p className="text-[10px] text-zinc-500 font-medium">With Alt</p>
+                    </div>
+                    <div className="p-3 rounded-xl bg-[#0f1420] border border-white/5 text-center">
+                      <p className="text-xl font-bold text-red-400">{scan.imagesAudit?.missingAlt || 0}</p>
+                      <p className="text-[10px] text-zinc-500 font-medium">Missing Alt</p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
 
-            <div className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
               <div className="p-5 rounded-2xl bg-[#0a0f1d]/60 border border-white/5">
                 <div className="flex items-center gap-2 mb-4">
-                  <Link2 className="w-4 h-4 text-lime-400" />
-                  <h3 className="text-sm font-bold text-white">Links & Media Audit</h3>
+                  <Type className="w-4 h-4 text-lime-400" />
+                  <h3 className="text-sm font-bold text-white">Heading Structure</h3>
                 </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="p-3 rounded-xl bg-[#0f1420] border border-white/5 text-center">
-                    <p className="text-xl font-bold text-white">{scan.linksAnalysis?.total || 0}</p>
-                    <p className="text-[10px] text-zinc-500 font-medium">Total Links</p>
-                  </div>
-                  <div className="p-3 rounded-xl bg-[#0f1420] border border-white/5 text-center">
-                    <p className="text-xl font-bold text-lime-400">{scan.imagesAudit?.withAlt || 0}</p>
-                    <p className="text-[10px] text-zinc-500 font-medium">Images with Alt</p>
-                  </div>
+                <div className="space-y-2.5">
+                  {headingLevels.map((h) => (
+                    <div key={h.label} className="flex items-center gap-3">
+                      <span className="w-7 text-[11px] font-bold text-zinc-400">{h.label}</span>
+                      <div className="flex-1 h-2 rounded-full bg-white/5 overflow-hidden">
+                        <div
+                          className="h-full bg-lime-400 rounded-full transition-all duration-500"
+                          style={{ width: h.count > 0 ? `${Math.max(4, (h.count / maxHeadingCount) * 100)}%` : "0%" }}
+                        />
+                      </div>
+                      <span className="w-6 text-right text-xs font-semibold text-zinc-300">{h.count}</span>
+                    </div>
+                  ))}
                 </div>
+                {heading.h1Text && (
+                  <div className="mt-4 p-3 rounded-xl bg-[#0f1420] border border-white/5">
+                    <p className="text-[10px] font-semibold text-zinc-500 mb-1">H1 Text:</p>
+                    <p className="text-xs text-zinc-200 font-medium">{heading.h1Text}</p>
+                  </div>
+                )}
+              </div>
+
+              <div className="p-5 rounded-2xl bg-[#0a0f1d]/60 border border-white/5">
+                <div className="flex items-center gap-2 mb-4">
+                  <Tag className="w-4 h-4 text-lime-400" />
+                  <h3 className="text-sm font-bold text-white">Top Keywords</h3>
+                </div>
+                {(scan.topKeywords || []).length === 0 ? (
+                  <p className="text-xs text-zinc-500 text-center py-6">No keyword data available for this scan.</p>
+                ) : (
+                  <div className="space-y-2.5">
+                    {scan.topKeywords.slice(0, 10).map((kw, idx) => (
+                      <div key={kw.word} className="flex items-center gap-3">
+                        <span className="w-4 text-[11px] font-bold text-zinc-600">{idx + 1}</span>
+                        <span className="w-24 shrink-0 text-xs font-semibold text-zinc-200 truncate">{kw.word}</span>
+                        <div className="flex-1 h-1.5 rounded-full bg-white/5 overflow-hidden">
+                          <div
+                            className="h-full bg-lime-400 rounded-full transition-all duration-500"
+                            style={{ width: `${Math.max(4, (kw.count / maxKeywordCount) * 100)}%` }}
+                          />
+                        </div>
+                        <span className="w-8 shrink-0 text-right text-[11px] text-zinc-400">{kw.count}×</span>
+                        <span className="w-12 shrink-0 text-right text-[11px] text-zinc-500">{kw.density}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          </>
+        )}
+
+        {/* Meta Tags Tab */}
+        {activeTab === "meta" && (
+          <div className="p-6 rounded-2xl bg-[#0a0f1d]/60 border border-white/5">
+            <div className="flex items-center gap-2 mb-5">
+              <FileText className="w-4 h-4 text-lime-400" />
+              <h3 className="text-sm font-bold text-white">Meta Tags Analysis</h3>
+            </div>
+
+            {(scan.metaTags || []).length === 0 ? (
+              <p className="text-xs text-zinc-500 text-center py-8">No meta tag data available for this scan.</p>
+            ) : (
+              <div className="space-y-3">
+                {scan.metaTags.map((tag) => (
+                  <div key={tag.title} className="p-4 rounded-xl bg-[#0f1420] border border-white/5 flex items-start justify-between gap-4">
+                    <div className="min-w-0 flex-1">
+                      <p className="text-xs font-bold text-white mb-1">{tag.title}</p>
+                      <p
+                        className={`text-xs break-words ${
+                          tag.status === "error" ? "text-red-400 italic" : "text-zinc-300"
+                        }`}
+                      >
+                        {tag.value}
+                      </p>
+                      {tag.subtext && <p className="text-[10px] text-zinc-500 mt-1">{tag.subtext}</p>}
+                    </div>
+                    <div className="flex items-center gap-2 shrink-0">
+                      {tag.badge && <span className="text-[11px] text-zinc-500 font-medium">{tag.badge}</span>}
+                      <span className={`w-2 h-2 rounded-full ${getStatusDotClasses(tag.status)}`} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Content Tab */}
+        {activeTab === "content" && (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="p-5 rounded-2xl bg-[#0a0f1d]/60 border border-white/5">
+              <h3 className="text-sm font-bold text-white mb-4">Content Stats</h3>
+              <div className="space-y-1">
+                {[
+                  { label: "Word Count", value: scan.quickStats?.words ?? 0 },
+                  { label: "Page Size", value: scan.quickStats?.pageSize || "N/A" },
+                  { label: "Load Time", value: scan.quickStats?.loadTime || "N/A" },
+                  { label: "Total Links", value: scan.linksAnalysis?.total ?? 0 },
+                  { label: "Total Images", value: scan.imagesAudit?.total ?? 0 },
+                  { label: "Total Headings", value: totalHeadings },
+                ].map((row) => (
+                  <div key={row.label} className="flex items-center justify-between py-3 border-b border-white/5 last:border-b-0">
+                    <span className="text-xs text-zinc-400 font-medium">{row.label}</span>
+                    <span className="text-sm font-bold text-white">{row.value}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="p-5 rounded-2xl bg-[#0a0f1d]/60 border border-white/5">
+              <h3 className="text-sm font-bold text-white mb-4">Heading Hierarchy</h3>
+              <div className="space-y-2.5">
+                {headingLevels.map((h) => {
+                  let statusBadge: { text: string; classes: string } | null = null;
+                  if (h.label === "H1") {
+                    if (h.count === 1) statusBadge = { text: "Good", classes: "bg-lime-500/10 text-lime-400 border-lime-500/20" };
+                    else if (h.count === 0) statusBadge = { text: "Missing", classes: "bg-red-500/10 text-red-400 border-red-500/20" };
+                    else statusBadge = { text: "Multiple", classes: "bg-amber-500/10 text-amber-400 border-amber-500/20" };
+                  }
+                  return (
+                    <div
+                      key={h.label}
+                      className="flex items-center justify-between p-3 rounded-xl bg-[#0f1420] border border-white/5"
+                    >
+                      <span className="text-xs font-mono font-semibold text-zinc-300">
+                        {`<${h.label}>`} <span className="text-zinc-500 font-sans">{h.count} tag{h.count === 1 ? "" : "s"}</span>
+                      </span>
+                      {statusBadge && (
+                        <span className={`px-2 py-0.5 rounded text-[10px] font-bold border ${statusBadge.classes}`}>
+                          {statusBadge.text}
+                        </span>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
             </div>
           </div>
         )}
 
+        {/* Issues Tab */}
         {activeTab === "issues" && (
-          <div className="p-6 rounded-2xl bg-[#0a0f1d]/60 border border-white/5 space-y-3">
-            {filteredIssues.map((issue) => (
-              <div key={issue.id} className="p-4 rounded-xl bg-[#0f1420] border border-white/5 flex items-center justify-between">
-                <div>
-                  <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30 uppercase">
-                    {issue.type}
-                  </span>
-                  <p className="text-xs text-zinc-200 mt-1">{issue.message}</p>
+          <div className="p-6 rounded-2xl bg-[#0a0f1d]/60 border border-white/5">
+            <div className="flex items-center gap-2 mb-4 flex-wrap">
+              <span className="text-xs font-semibold text-zinc-400 mr-1">Filter:</span>
+              {(
+                [
+                  { key: "all", label: "All", count: scan.issues?.length || 0 },
+                  { key: "critical", label: "Critical", count: scan.issuesSummary?.critical || 0 },
+                  { key: "warning", label: "Warnings", count: scan.issuesSummary?.warnings || 0 },
+                  { key: "info", label: "Info", count: scan.issuesSummary?.info || 0 },
+                ] as const
+              ).map((f) => (
+                <button
+                  key={f.key}
+                  onClick={() => setIssueFilter(f.key)}
+                  className={`px-3 py-1 rounded-full text-[11px] font-bold border transition-all ${
+                    issueFilter === f.key
+                      ? "bg-lime-500 text-black border-lime-500"
+                      : "bg-white/5 text-zinc-400 border-white/10 hover:text-white hover:bg-white/10"
+                  }`}
+                >
+                  {f.count} {f.label}
+                </button>
+              ))}
+            </div>
+
+            <div className="space-y-3">
+              {filteredIssues.map((issue) => (
+                <div key={issue.id} className="p-4 rounded-xl bg-[#0f1420] border border-white/5">
+                  <div className="flex items-start justify-between gap-3">
+                    <span className={`px-2 py-0.5 rounded text-[10px] font-bold border uppercase shrink-0 ${getIssueBadgeClasses(issue.type)}`}>
+                      {issue.type}
+                    </span>
+                  </div>
+                  <p className="text-xs text-zinc-200 mt-2">{issue.message}</p>
+                  <p className="text-[10px] text-zinc-500 font-medium mt-1">{issue.category}</p>
                 </div>
-              </div>
-            ))}
+              ))}
+              {filteredIssues.length === 0 && (
+                <div className="flex flex-col items-center justify-center py-10 text-zinc-500">
+                  <Info className="w-6 h-6 mb-2" />
+                  <p className="text-xs">No issues match this filter.</p>
+                </div>
+              )}
+            </div>
           </div>
         )}
       </main>
