@@ -104,7 +104,7 @@ export default function ReportPage() {
         }
       } catch (err) {
         console.error("Failed to fetch scan details:", err);
-      } font-medium finally {
+      } finally {
         setLoading(false);
       }
     };
